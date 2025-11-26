@@ -1,40 +1,13 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Printer, RefreshCw, PenTool, Heart, Anchor, MessageCircle, ArrowDown, Quote, Eye, AlertCircle, CheckCircle2, Lightbulb, ArrowRight, ShieldAlert, Users, Sparkles, Brain, Flower2, XCircle, Skull, Sun, Feather, Sunrise, Scale, Ear, Zap, Music, Wind, Hourglass, RefreshCcw, Leaf } from 'lucide-react';
+import { Printer, RefreshCw, PenTool, Heart, Anchor, MessageCircle, ArrowDown, Quote, Eye, AlertCircle, CheckCircle2, Lightbulb, ArrowRight, ShieldAlert, Users, Sparkles, Brain, Flower2, XCircle, Skull, Sun, Feather, Sunrise, Scale, Ear, Zap, Music, Wind, Hourglass, RefreshCcw, Leaf, Building2, Globe, Lock, Unlock, Handshake, GitCompare, Flame, Siren, StickyNote, Footprints, Flag, Ghost, Repeat, Mic } from 'lucide-react';
 
-// --- Google Fonts (Shippori Mincho) ---
+// --- Google Fonts ---
 const fontLink = document.createElement('link');
 fontLink.href = 'https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;700;900&display=swap';
 fontLink.rel = 'stylesheet';
 document.head.appendChild(fontLink);
 
 // --- Data Definitions ---
-const feelingsData = {
-  satisfied: {
-    label: "満たされている（快）",
-    description: "ニーズが満たされたことによる喜びや活力",
-    categories: {
-      "愛情・親しみ": ["愛情に満ちた", "親しみのある", "やさしい", "あたたかさのある", "オープンな", "心を開いた"],
-      "喜び・幸福": ["幸福感", "大喜びする", "喜びに満ちた", "嬉しい", "楽しい", "満足している"],
-      "感謝・感動": ["感謝している", "ありがたい", "感動している", "感激の", "心に触れた"],
-      "活力・熱中": ["力がみなぎる", "夢中だ", "わくわくする", "生き生きした", "情熱的な", "刺激される"],
-      "平安・安心": ["安心だ", "ほっとする", "落ち着いた", "穏やかな", "リラックスした", "信頼している"],
-      "休息・回復": ["すっきりした", "休息のとれた", "さわやかな", "晴れ晴れした"]
-    }
-  },
-  unsatisfied: {
-    label: "満たされていない（不快）",
-    description: "ニーズが満たされていないことによる警鐘",
-    categories: {
-      "恐れ・不安": ["こわい", "心配で", "不安な", "落ち着かない", "おびえた", "疑い深い"],
-      "怒り・嫌悪": ["イライラ", "怒っている", "腹が立つ", "むかつく", "不機嫌", "憤慨する"],
-      "混乱・困惑": ["混乱した", "困惑する", "迷っている", "途方に暮れる", "訳が分からない"],
-      "悲しみ・痛み": ["悲しい", "傷ついた", "落ち込んだ", "がっかりした", "失望した", "寂しい"],
-      "疲労・無力": ["疲れた", "うんざり", "無力感", "圧倒された", "やる気が出ない", "消耗した"],
-      "恥・自責": ["恥ずかしい", "情けない", "申し訳ない", "気まずい", "後悔した"]
-    }
-  }
-};
-
 const needsRawData = `
 つながり,受け入れられること
 つながり,愛情
@@ -86,11 +59,36 @@ const parseNeeds = (csv) => {
 };
 const needsData = parseNeeds(needsRawData);
 
+const feelingsData = {
+  satisfied: {
+    label: "満たされている（快）",
+    categories: {
+      "愛情・親しみ": ["愛情に満ちた", "親しみのある", "やさしい", "あたたかさのある", "オープンな", "心を開いた"],
+      "喜び・幸福": ["幸福感", "大喜びする", "喜びに満ちた", "嬉しい", "楽しい", "満足している"],
+      "感謝・感動": ["感謝している", "ありがたい", "感動している", "感激の", "心に触れた"],
+      "活力・熱中": ["力がみなぎる", "夢中だ", "わくわくする", "生き生きした", "情熱的な", "刺激される"],
+      "平安・安心": ["安心だ", "ほっとする", "落ち着いた", "穏やかな", "リラックスした", "信頼している"],
+      "休息・回復": ["すっきりした", "休息のとれた", "さわやかな", "晴れ晴れした"]
+    }
+  },
+  unsatisfied: {
+    label: "満たされていない（不快）",
+    categories: {
+      "恐れ・不安": ["こわい", "心配で", "不安な", "落ち着かない", "おびえた", "疑い深い"],
+      "怒り・嫌悪": ["イライラ", "怒っている", "腹が立つ", "むかつく", "不機嫌", "憤慨する"],
+      "混乱・困惑": ["混乱した", "困惑する", "迷っている", "途方に暮れる", "訳が分からない"],
+      "悲しみ・痛み": ["悲しい", "傷ついた", "落ち込んだ", "がっかりした", "失望した", "寂しい"],
+      "疲労・無力": ["疲れた", "うんざり", "無力感", "圧倒された", "やる気が出ない", "消耗した"],
+      "恥・自責": ["恥ずかしい", "情けない", "申し訳ない", "気まずい", "後悔した"]
+    }
+  }
+};
+
 // --- Shared Components ---
 
 const SectionTitle = ({ number, title, subtitle, icon: Icon, colorClass = "text-stone-800" }) => (
   <div className="flex items-center gap-4 mb-6 border-b border-stone-200 pb-2 print:mb-4">
-    <div className={`flex items-center justify-center w-10 h-10 rounded-full font-serif text-lg shadow-md print:w-8 print:h-8 print:text-sm ${number === '02' || number === '03' ? 'bg-white border-2' : 'bg-stone-800 text-[#faf9f6]'}`}>
+    <div className={`flex items-center justify-center w-10 h-10 rounded-full font-serif text-lg shadow-md print:w-8 print:h-8 print:text-sm ${number.length > 2 ? 'w-auto px-3' : ''} ${number === '02' || number === '03' ? 'bg-white border-2' : 'bg-stone-800 text-[#faf9f6]'}`}>
       <span className={number === '02' || number === '03' ? 'text-stone-800 font-bold' : ''}>{number}</span>
     </div>
     <div>
@@ -102,6 +100,33 @@ const SectionTitle = ({ number, title, subtitle, icon: Icon, colorClass = "text-
     {Icon && <Icon className="ml-auto text-stone-300 print:hidden" size={24} />}
   </div>
 );
+
+const NeedsGuide = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div className="mb-6 no-print">
+      <button onClick={() => setIsOpen(!isOpen)} className="text-xs flex items-center gap-1 text-stone-500 hover:text-stone-800 transition-colors border-b border-stone-300 border-dashed pb-0.5">
+        <Lightbulb size={14} />{isOpen ? "ガイドを閉じる" : "ニーズリストを開く"}
+      </button>
+      {isOpen && (
+        <div className="mt-4 bg-stone-50 p-4 rounded-sm border border-stone-200 text-sm leading-relaxed animate-in fade-in slide-in-from-top-2 duration-300 h-64 overflow-y-auto">
+           {Object.entries(needsData).map(([cat, items]) => (
+              <div key={cat} className="mb-4">
+                <h4 className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">{cat}</h4>
+                <div className="flex flex-wrap gap-2">
+                  {items.map(item => (
+                    <span key={item} className="px-2 py-1 text-xs rounded border bg-white text-stone-600 border-stone-200">
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const ObservationGuide = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -130,40 +155,6 @@ const ObservationGuide = () => {
               <div><span className="font-bold block text-xs mb-1">観察（事実）</span>「約束に遅れた」「挨拶をしなかった」</div>
             </div>
           </div>
-        </div>
-      )}
-    </div>
-  );
-};
-
-const NeedsGuide = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  return (
-    <div className="mb-6 no-print">
-      <div className="flex items-center gap-2 mb-2">
-        <Quote size={16} className="text-stone-400 rotate-180" />
-        <p className="text-sm font-serif italic text-stone-600">
-          人間のニーズを理解すれば、それを満たす仕事は半分終わったようなものだ。<br/>
-          <span className="text-xs text-stone-400 not-italic ml-4">── アドライ・スティーヴンソン</span>
-        </p>
-      </div>
-      <button onClick={() => setIsOpen(!isOpen)} className="text-xs flex items-center gap-1 text-stone-500 hover:text-stone-800 transition-colors border-b border-stone-300 border-dashed pb-0.5">
-        <Lightbulb size={14} />{isOpen ? "ガイドを閉じる" : "「手段」と「ニーズ」の違いを見る"}
-      </button>
-      {isOpen && (
-        <div className="mt-4 bg-stone-50 p-4 rounded-sm border border-stone-200 text-sm leading-relaxed animate-in fade-in slide-in-from-top-2 duration-300 h-64 overflow-y-auto">
-           {Object.entries(needsData).map(([cat, items]) => (
-              <div key={cat} className="mb-4">
-                <h4 className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">{cat}</h4>
-                <div className="flex flex-wrap gap-2">
-                  {items.map(item => (
-                    <span key={item} className="px-2 py-1 text-xs rounded border bg-white text-stone-600 border-stone-200">
-                      {item}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
         </div>
       )}
     </div>
@@ -201,7 +192,7 @@ const PauseButton = () => {
 
 
 // ==========================================
-// MODE 1: DIALOGUE MODE (Full Feature)
+// MODE 1: DIALOGUE MODE
 // ==========================================
 const DialogueMode = () => {
   const [observation, setObservation] = useState('');
@@ -211,8 +202,6 @@ const DialogueMode = () => {
   const [feelingType, setFeelingType] = useState('unsatisfied');
   const [intention, setIntention] = useState(null);
   const [reaction, setReaction] = useState(null);
-  
-  // Step 5 State
   const [predictedResponse, setPredictedResponse] = useState('');
   const [otherFeelings, setOtherFeelings] = useState('');
   const [otherNeeds, setOtherNeeds] = useState('');
@@ -327,4 +316,826 @@ const DialogueMode = () => {
               <p className="font-bold text-stone-800 mb-4 text-center">シミュレーション：もし相手があなたのリクエストに「No（やりたくない）」と言ったら？</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <button onClick={() => setReaction('force')} className={`p-4 rounded-lg border text-left transition-all ${reaction === 'force' ? 'bg-rose-50 border-rose-300 ring-1 ring-rose-300' : 'bg-white border-stone-200 hover:border-stone-400'}`}><span className="block font-bold mb-2 text-stone-800">🤔 私の反応パターンA</span><ul className="text-sm text-stone-600 list-disc list-inside space-y-1"><li>不機嫌になる、がっかりした態度を見せる</li><li>「すべき」論で説得しようとする</li><li>批判や罪悪感を感じさせる</li></ul></button>
-                <button onClick={() => setReaction('empathy')} className={`p-4 rounded-lg border text-left transition-all ${reaction === 'empathy' ? 'bg-teal-50 border-teal-300 ring-1 ring-teal-300' : 'bg-white border-stone-20
+                <button onClick={() => setReaction('empathy')} className={`p-4 rounded-lg border text-left transition-all ${reaction === 'empathy' ? 'bg-teal-50 border-teal-300 ring-1 ring-teal-300' : 'bg-white border-stone-200 hover:border-stone-400'}`}><span className="block font-bold mb-2 text-stone-800">😌 私の反応パターンB</span><ul className="text-sm text-stone-600 list-disc list-inside space-y-1"><li>がっかりはするが、相手の気持ちを尊重する</li><li>「なぜやりたくないのか」を聞く</li><li>一緒に別の方法を探す</li></ul></button>
+              </div>
+              {reaction === 'force' && (<div className="mt-6 bg-rose-50 p-4 rounded border-l-4 border-rose-500 animate-in fade-in"><h5 className="font-bold text-rose-800 flex items-center gap-2 mb-2"><AlertCircle size={18} />それは「強要（Power Over）」かもしれません</h5></div>)}
+              {reaction === 'empathy' && (<div className="mt-6 bg-teal-50 p-4 rounded border-l-4 border-teal-500 animate-in fade-in"><h5 className="font-bold text-teal-800 flex items-center gap-2 mb-2"><Users size={18} />それは「リクエスト（Power With）」です</h5></div>)}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="page-break-avoid mt-12 mb-12">
+        <SectionTitle number="05" title="美しい歌を聴く" subtitle="Hearing the Beautiful Song" icon={Music} colorClass="text-indigo-800" />
+        <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-indigo-300">
+          <div className="mb-6 no-print">
+            <p className="text-sm text-stone-600 mb-4 leading-relaxed">たとえ相手が「人殺し！」「わがまま！」と叫んでいても、それは「私の大切なニーズを見てほしい」という<strong className="text-indigo-700">美しい歌</strong>です。</p>
+            <PauseButton />
+            <div className="bg-indigo-50 p-6 rounded border border-indigo-100 text-sm mt-6">
+              <h5 className="font-bold text-indigo-900 mb-4 flex items-center gap-2"><Ear size={18}/> 共感的翻訳</h5>
+              <div className="space-y-6">
+                <div><label className="block text-xs font-bold text-stone-500 mb-1">相手の言葉（診断）</label><textarea value={predictedResponse} onChange={(e) => setPredictedResponse(e.target.value)} placeholder="例：「クビになりたいなら好きなようにしろ」" className="w-full min-h-[60px] p-3 bg-white border border-stone-300 rounded outline-none" /></div>
+                <div className="grid gap-3 bg-white/60 p-4 rounded-lg border border-indigo-200">
+                  <div><label className="block text-xs text-indigo-700 mb-1">相手の感情（推測）</label><input type="text" value={otherFeelings} onChange={(e) => setOtherFeelings(e.target.value)} placeholder="例：不安、心配、焦り……" className="w-full p-2 border border-indigo-200 rounded text-sm bg-indigo-50/30" /></div>
+                  <div><label className="block text-xs text-indigo-700 mb-1">相手のニーズ（推測）</label><input type="text" value={otherNeeds} onChange={(e) => setOtherNeeds(e.target.value)} placeholder="例：業務の確実な遂行、信頼……" className="w-full p-2 border border-indigo-200 rounded text-sm bg-indigo-50/30" /></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="p-6 bg-indigo-600 text-white rounded shadow-md text-center font-serif mt-6">
+            <p className="text-xs font-bold mb-4 opacity-80 uppercase tracking-widest">The Beautiful Song</p>
+            <p className="mb-4 text-lg leading-relaxed">もし相手が「{predictedResponse || '……'}」と言ったとしても、私はその奥にある、<br/><span className="font-bold text-indigo-100 border-b border-indigo-400 mx-1 px-1 text-xl">{otherNeeds || '______'}</span><br/>という美しい願い（歌）を聴き取ります。</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+
+// ==========================================
+// MODE 2: SELF-EMPATHY MODE
+// ==========================================
+const SelfEmpathyMode = () => {
+  const [action, setAction] = useState('');
+  const [judgement, setJudgement] = useState('');
+  const [unmetNeeds, setUnmetNeeds] = useState(new Set());
+  const [metNeeds, setMetNeeds] = useState(new Set());
+  const [strategy, setStrategy] = useState('');
+
+  const toggleSet = (set, val, setter) => {
+    const newSet = new Set(set);
+    if (newSet.has(val)) newSet.delete(val); else newSet.add(val);
+    setter(newSet);
+  };
+
+  return (
+    <div className="animate-in fade-in duration-500">
+      <div className="mb-12 text-center no-print">
+        <div className="bg-emerald-50/50 p-6 rounded-lg border border-emerald-100 max-w-2xl mx-auto">
+          <p className="text-emerald-900 font-bold text-lg mb-2 font-serif">過ちは知恵の成長痛なのだ。<br/>それなくしては、個々の成長も、進歩も、克服もない。</p>
+          <p className="text-emerald-700/60 text-xs">── ウィリアム・ジョージ・ジョーダン</p>
+        </div>
+        <div className="mt-4 p-4 bg-stone-50 rounded text-stone-500 text-sm leading-relaxed border border-stone-100">
+          <p className="font-bold text-stone-600 mb-1 flex items-center gap-2"><Lock size={14}/> 内なる支配構造からの解放</p>
+          「自分はダメだ」「～すべきだった」という声は、あなたの本心ではなく、<br/>
+          8000年の歴史の中で植え付けられた「支配的な教育（正誤・賞罰）」のリフレインかもしれません。
+        </div>
+      </div>
+
+      <section className="page-break-avoid mb-12">
+        <SectionTitle number="01" title="行動と自己批判" subtitle="Action & Self-Judgement" icon={Skull} colorClass="text-stone-800" />
+        <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-stone-300">
+          <div className="mb-6">
+            <label className="block text-sm font-bold text-stone-700 mb-2">後悔している行動（事実）</label>
+            <textarea value={action} onChange={(e) => setAction(e.target.value)} placeholder="例：子どもに怒鳴った。" className="w-full min-h-[60px] p-3 bg-stone-50 border border-stone-200 focus:bg-white outline-none rounded-sm mb-4" />
+          </div>
+          <div>
+            <label className="block text-sm font-bold text-stone-700 mb-2 flex items-center gap-2"><span className="bg-rose-100 text-rose-800 px-2 py-0.5 rounded text-xs">Inner Critic</span>その時、自分自身になんと言っていましたか？</label>
+            <div className="bg-rose-50 p-4 rounded border border-rose-100 text-sm text-stone-600 mb-2"><span className="font-bold text-rose-800 block mb-1 text-xs">⚠️ 暴力的な言葉を吐き出してください</span>「この大ばか者め！」「ひどい母親だ」これらは満たされないニーズの悲劇的な表現です。</div>
+            <textarea value={judgement} onChange={(e) => setJudgement(e.target.value)} placeholder="心の声：「なんであんなこと言ったんだ...」" className="w-full min-h-[60px] p-3 bg-white border border-rose-200 focus:border-rose-400 outline-none rounded-sm text-rose-900 placeholder:text-rose-200" />
+          </div>
+        </div>
+        <div className="flex justify-center -mb-6 relative z-10 no-print mt-4"><div className="bg-white border border-stone-200 rounded-full px-4 py-1 text-xs font-bold text-stone-500 shadow-sm flex items-center gap-2"><ArrowDown size={14} /> ニーズの言葉に翻訳する</div></div>
+      </section>
+
+      <section className="page-break-avoid mb-12 mt-8">
+        <SectionTitle number="02" title="嘆き（甘い痛み）" subtitle="Mourning" icon={Heart} colorClass="text-rose-800" />
+        <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-rose-300">
+          <div className="mb-6 text-sm text-stone-600 no-print"><p>自分を責める言葉の裏にある、<strong>本当に大切にしたかった価値観（ニーズ）</strong>は何ですか？</p></div>
+          <div className="bg-rose-50/30 p-4 rounded-lg mb-4 no-print h-64 overflow-y-auto border border-rose-100">
+            {Object.entries(needsData).map(([cat, items]) => (<div key={cat} className="mb-4"><h4 className="text-[10px] font-bold text-rose-400 uppercase tracking-widest mb-1">{cat}</h4><div className="flex flex-wrap gap-2">{items.map(item => (<button key={item} onClick={() => toggleSet(unmetNeeds, item, setUnmetNeeds)} className={`px-2 py-1 text-xs rounded border transition-all ${unmetNeeds.has(item) ? 'bg-rose-500 text-white border-rose-500' : 'bg-white text-stone-600 border-stone-200 hover:border-rose-300'}`}>{item}</button>))}</div></div>))}
+          </div>
+          <div className="p-4 bg-rose-50 border border-rose-200 rounded text-rose-900 font-medium text-center font-serif">私が自分を責めていたのは、<br className="md:hidden"/><span className="font-bold text-rose-700 mx-1 border-b border-rose-400">{Array.from(unmetNeeds).join('、') || '______'}</span><br className="md:hidden"/>というニーズを大切にしたかったからです。</div>
+        </div>
+      </section>
+
+      <section className="page-break-avoid mt-12 mb-12">
+        <SectionTitle number="03" title="動機の理解" subtitle="The Good Reason" icon={Lightbulb} colorClass="text-teal-800" />
+        <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-teal-300">
+          <div className="mb-6 text-sm text-stone-600 no-print"><p>一方で、その行動をとった時にも「もっともな理由」があったはずです。その瞬間、あなたは<strong>どんなニーズを満たそうとしていた</strong>のでしょうか？</p></div>
+          <div className="bg-teal-50/30 p-4 rounded-lg mb-4 no-print h-64 overflow-y-auto border border-teal-100">
+            {Object.entries(needsData).map(([cat, items]) => (<div key={cat} className="mb-4"><h4 className="text-[10px] font-bold text-teal-400 uppercase tracking-widest mb-1">{cat}</h4><div className="flex flex-wrap gap-2">{items.map(item => (<button key={item} onClick={() => toggleSet(metNeeds, item, setMetNeeds)} className={`px-2 py-1 text-xs rounded border transition-all ${metNeeds.has(item) ? 'bg-teal-600 text-white border-teal-600' : 'bg-white text-stone-600 border-stone-200 hover:border-teal-300'}`}>{item}</button>))}</div></div>))}
+          </div>
+          <div className="p-4 bg-teal-50 border border-teal-200 rounded text-teal-900 font-medium text-center font-serif">あの時、私は<br className="md:hidden"/><span className="font-bold text-teal-700 mx-1 border-b border-teal-400">{Array.from(metNeeds).join('、') || '______'}</span><br className="md:hidden"/>というニーズを満たそうと必死でした。</div>
+        </div>
+      </section>
+
+      <section className="page-break-avoid mb-12">
+        <SectionTitle number="04" title="統合と成長" subtitle="Integration" icon={Sparkles} colorClass="text-purple-800" />
+        <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-purple-300">
+          <div className="mb-4 bg-purple-50 p-4 rounded border border-purple-100 text-sm text-purple-900 no-print"><span className="font-bold flex items-center gap-2 mb-2"><Brain size={16}/> 自尊心を失わずに学ぶ</span>「満たされなかったニーズ」と「満たそうとしたニーズ」。この両方を大切にするために、次からはどのような行動が選べるでしょうか？</div>
+          <div className="text-center mb-4 text-stone-600 font-serif text-lg"><span className="text-rose-700 font-bold">{Array.from(unmetNeeds).join('・') || '大切な願い'}</span><span className="mx-2 text-stone-400">&</span><span className="text-teal-700 font-bold">{Array.from(metNeeds).join('・') || '行動の理由'}</span></div>
+          <textarea value={strategy} onChange={(e) => setStrategy(e.target.value)} placeholder="両方のニーズを満たすための、新しい戦略や自分へのリクエスト..." className="w-full min-h-[100px] p-4 bg-purple-50/30 border border-purple-200 focus:border-purple-400 focus:bg-white outline-none resize-y rounded-sm text-stone-800" />
+        </div>
+      </section>
+    </div>
+  );
+};
+
+
+// ==========================================
+// MODE 3: HEALING MODE
+// ==========================================
+const HealingMode = () => {
+  const [person, setPerson] = useState('');
+  const [myJudgement, setMyJudgement] = useState('');
+  const [myUnmetNeeds, setMyUnmetNeeds] = useState(new Set());
+  const [theirNeeds, setTheirNeeds] = useState(new Set());
+  
+  const toggleSet = (set, val, setter) => {
+    const newSet = new Set(set);
+    if (newSet.has(val)) newSet.delete(val); else newSet.add(val);
+    setter(newSet);
+  };
+
+  return (
+    <div className="animate-in fade-in duration-500">
+      <div className="mb-12 text-center no-print">
+        <div className="bg-orange-50/50 p-6 rounded-lg border border-orange-100 max-w-2xl mx-auto">
+          <p className="text-orange-900 font-bold text-lg mb-2 font-serif">嘆く暇のない者は、治る暇もない。</p>
+          <p className="text-orange-700/60 text-xs">── サー・ヘンリー・テイラー</p>
+        </div>
+        <p className="text-stone-500 text-sm mt-4 leading-relaxed">過去の痛みを「謝罪」や「許し」のゲームではなく、<br/>自分と相手、双方の内面で息づいていた「ニーズ」と出会い直すことで癒やしていきます。</p>
+      </div>
+
+      <section className="page-break-avoid mb-12">
+        <SectionTitle number="01" title="出来事と診断" subtitle="The Event & Diagnosis" icon={Skull} colorClass="text-stone-800" />
+        <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-stone-300">
+          <div className="mb-6">
+            <label className="block text-sm font-bold text-stone-700 mb-2">誰との、どのような出来事ですか？</label>
+            <textarea value={person} onChange={(e) => setPerson(e.target.value)} placeholder="例：父に厳しく叱られたこと。" className="w-full min-h-[60px] p-3 bg-stone-50 border border-stone-200 focus:bg-white outline-none rounded-sm mb-4" />
+          </div>
+          <div>
+            <label className="block text-sm font-bold text-stone-700 mb-2 flex items-center gap-2"><span className="bg-rose-100 text-rose-800 px-2 py-0.5 rounded text-xs">Diagnosis</span>その人について、今、自分の中でどんな言葉（診断）が息づいていますか？</label>
+            <div className="bg-rose-50 p-4 rounded border border-rose-100 text-sm text-stone-600 mb-2"><span className="font-bold text-rose-800 block mb-1 text-xs">⚠️ 痛みを吐き出す</span>「最低だ」「思いやりがない」この診断は、あなたの満たされなかったニーズの悲劇的な表現です。</div>
+            <textarea value={myJudgement} onChange={(e) => setMyJudgement(e.target.value)} placeholder="相手への非難や診断..." className="w-full min-h-[60px] p-3 bg-white border border-rose-200 focus:border-rose-400 outline-none rounded-sm text-rose-900 placeholder:text-rose-200" />
+          </div>
+        </div>
+      </section>
+
+      <section className="page-break-avoid mb-12">
+        <SectionTitle number="02" title="私の嘆き" subtitle="My Mourning" icon={Heart} colorClass="text-rose-800" />
+        <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-rose-300">
+          <div className="mb-6 text-sm text-stone-600 no-print"><p>その診断の奥にある、あなたの悲しみ（満たされなかったニーズ）は何ですか？</p></div>
+          <div className="bg-rose-50/30 p-4 rounded-lg mb-4 no-print h-64 overflow-y-auto border border-rose-100">
+            {Object.entries(needsData).map(([cat, items]) => (<div key={cat} className="mb-4"><h4 className="text-[10px] font-bold text-rose-400 uppercase tracking-widest mb-1">{cat}</h4><div className="flex flex-wrap gap-2">{items.map(item => (<button key={item} onClick={() => toggleSet(myUnmetNeeds, item, setMyUnmetNeeds)} className={`px-2 py-1 text-xs rounded border transition-all ${myUnmetNeeds.has(item) ? 'bg-rose-500 text-white border-rose-500' : 'bg-white text-stone-600 border-stone-200 hover:border-rose-300'}`}>{item}</button>))}</div></div>))}
+          </div>
+          <div className="p-4 bg-rose-50 border border-rose-200 rounded text-rose-900 font-medium text-center font-serif">私は悲しい。なぜなら、<br className="md:hidden"/><span className="font-bold text-rose-700 mx-1 border-b border-rose-400">{Array.from(myUnmetNeeds).join('、') || '______'}</span><br className="md:hidden"/>というニーズが大切にされなかったからです。</div>
+        </div>
+      </section>
+
+      <section className="page-break-avoid mt-12 mb-12">
+        <SectionTitle number="03" title="相手の嘆き（共感）" subtitle="Empathy for the Other" icon={Feather} colorClass="text-orange-800" />
+        <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-orange-300">
+          <div className="mb-6 text-sm text-stone-600 no-print"><p className="mb-2 font-bold text-stone-800"><Users size={16} className="inline mr-1"/> 相手になりきってみる</p><p>当時、相手の内面では何が息づいていたのでしょうか？「悪意」ではなく、相手なりの「満たされない痛み」や「不器用な手段」として想像してみます。</p></div>
+          <div className="bg-orange-50/30 p-4 rounded-lg mb-4 no-print h-64 overflow-y-auto border border-orange-100">
+            {Object.entries(needsData).map(([cat, items]) => (<div key={cat} className="mb-4"><h4 className="text-[10px] font-bold text-orange-400 uppercase tracking-widest mb-1">{cat}</h4><div className="flex flex-wrap gap-2">{items.map(item => (<button key={item} onClick={() => toggleSet(theirNeeds, item, setTheirNeeds)} className={`px-2 py-1 text-xs rounded border transition-all ${theirNeeds.has(item) ? 'bg-orange-600 text-white border-orange-600' : 'bg-white text-stone-600 border-stone-200 hover:border-orange-300'}`}>{item}</button>))}</div></div>))}
+          </div>
+          <div className="p-6 bg-orange-50 border border-orange-200 rounded text-orange-900 font-medium font-serif italic relative">
+             <Quote size={24} className="absolute top-2 left-2 text-orange-200 rotate-180" />
+             <div className="text-center">「あの時、私（相手）も苦しんでいたんだ。<br/><span className="font-bold text-orange-700 mx-1 border-b border-orange-400">{Array.from(theirNeeds).join('、') || '______'}</span><br/>を満たそうとして、あんな不器用なやり方しかできなかった。その結果、お前を傷つけてしまって悲しい。」</div>
+             <Quote size={24} className="absolute bottom-2 right-2 text-orange-200" />
+          </div>
+        </div>
+      </section>
+
+      <div className="mx-4 md:mx-8 mb-8 p-6 bg-white border-2 border-stone-800 text-center shadow-[4px_4px_0px_0px_rgba(68,64,60,1)] print:border print:shadow-none">
+          <div className="text-xs font-bold text-stone-400 uppercase tracking-widest mb-4 flex items-center justify-center gap-2"><Sunrise size={16} /> Healing Insight</div>
+          <p className="text-lg md:text-xl font-medium text-stone-800 font-serif leading-relaxed">私の痛み：<span className="text-rose-700 border-b border-rose-300 mx-1">{Array.from(myUnmetNeeds).join('・')}</span><br className="md:hidden"/>相手の痛み：<span className="text-orange-700 border-b border-orange-300 mx-1">{Array.from(theirNeeds).join('・')}</span><br/><span className="text-sm text-stone-500 mt-4 block">私たちは同じ人間としてのニーズ（痛み）でつながっているかもしれません。</span></p>
+      </div>
+    </div>
+  );
+};
+
+
+// ==========================================
+// MODE 4: RESTORATIVE MODE
+// ==========================================
+const RestorativeMode = () => {
+  const [behavior, setBehavior] = useState('');
+  const [theirNeeds, setTheirNeeds] = useState(new Set());
+  const [myNeeds, setMyNeeds] = useState(new Set());
+  const [newStrategy, setNewStrategy] = useState('');
+  const [invitation, setInvitation] = useState('');
+  const [purpose, setPurpose] = useState(null);
+  const [opponentType, setOpponentType] = useState('individual');
+
+  const toggleSet = (set, val, setter) => { const newSet = new Set(set); if (newSet.has(val)) newSet.delete(val); else newSet.add(val); setter(newSet); };
+
+  return (
+    <div className="animate-in fade-in duration-500">
+      <div className="mb-12 text-center no-print">
+        <div className="bg-teal-50/50 p-6 rounded-lg border border-teal-100 max-w-2xl mx-auto">
+          <p className="text-teal-900 font-bold text-lg mb-2 font-serif">変化せずに進歩することなどありえない。<br/>自分の心を変えられない者は何ごとも変えられない。</p>
+          <p className="text-teal-700/60 text-xs">── ジョージ・バーナード・ショー</p>
+        </div>
+        <p className="text-stone-500 text-sm mt-4 leading-relaxed">誰かに何かを「やめさせる（懲罰）」のではなく、<br/>お互いのニーズを満たす「より良い方法（修復）」を見つけるためのプロセスです。</p>
+      </div>
+
+      <section className="page-break-avoid mb-12">
+        <SectionTitle number="01" title="行動と目的" subtitle="Behavior & Purpose" icon={AlertCircle} colorClass="text-stone-800" />
+        <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-stone-300">
+          <div className="mb-6 flex justify-center gap-4 no-print"><button onClick={() => setOpponentType('individual')} className={`px-4 py-2 rounded text-sm font-bold transition-all ${opponentType === 'individual' ? 'bg-stone-800 text-white' : 'bg-stone-100 text-stone-500'}`}><Users size={16} className="inline mr-2"/>相手は「個人」</button><button onClick={() => setOpponentType('gang')} className={`px-4 py-2 rounded text-sm font-bold transition-all ${opponentType === 'gang' ? 'bg-stone-800 text-white' : 'bg-stone-100 text-stone-500'}`}><Building2 size={16} className="inline mr-2"/>相手は「組織」</button></div>
+          <div className="mb-6">
+            <label className="block text-sm font-bold text-stone-700 mb-2">変化を起こしたい行動（事実）</label>
+            <textarea value={behavior} onChange={(e) => setBehavior(e.target.value)} placeholder={opponentType === 'individual' ? "例：息子がたばこを吸っている。" : "例：会社が利益のために環境を破壊している。"} className="w-full min-h-[60px] p-3 bg-stone-50 border border-stone-200 focus:bg-white outline-none rounded-sm mb-4" />
+          </div>
+          <div className="bg-stone-50 p-4 rounded border border-stone-200 no-print">
+            <p className="font-bold text-stone-700 mb-3 text-center text-sm">あなたの目的はどちらですか？</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4"><button onClick={() => setPurpose('stop')} className={`p-3 rounded border text-sm transition-all ${purpose === 'stop' ? 'bg-rose-50 border-rose-400 ring-1 ring-rose-400 text-rose-900' : 'bg-white border-stone-300 hover:bg-stone-100'}`}><span className="block font-bold mb-1"><XCircle size={16} className="inline mr-1"/> 行動をやめさせること</span></button><button onClick={() => setPurpose('better')} className={`p-3 rounded border text-sm transition-all ${purpose === 'better' ? 'bg-teal-50 border-teal-400 ring-1 ring-teal-400 text-teal-900' : 'bg-white border-stone-300 hover:bg-stone-100'}`}><span className="block font-bold mb-1"><RefreshCcw size={16} className="inline mr-1"/> より良い方法を見つけること</span></button></div>
+            {purpose === 'stop' && (<p className="mt-3 text-xs text-rose-600 text-center animate-in fade-in">⚠️ 「やめさせる」を目的にすると、相手は抵抗します。</p>)}
+            {purpose === 'better' && (<p className="mt-3 text-xs text-teal-600 text-center animate-in fade-in">✨ その意識がスタート地点です！</p>)}
+          </div>
+        </div>
+      </section>
+
+      <section className="page-break-avoid mb-12">
+        <SectionTitle number="02" title="相手の肯定的意図" subtitle="Their Needs" icon={Heart} colorClass="text-teal-800" />
+        <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-teal-300">
+          <div className="mb-6 text-sm text-stone-600 no-print"><p>その行動によって、彼らは何を得ようとしていた（構造的ニーズを満たそうとしていた）のでしょうか？</p></div>
+          <div className="bg-teal-50/30 p-4 rounded-lg mb-4 no-print h-48 overflow-y-auto border border-teal-100">{Object.entries(needsData).map(([cat, items]) => (<div key={cat} className="mb-4"><h4 className="text-[10px] font-bold text-teal-400 uppercase tracking-widest mb-1">{cat}</h4><div className="flex flex-wrap gap-2">{items.map(item => (<button key={item} onClick={() => toggleSet(theirNeeds, item, setTheirNeeds)} className={`px-2 py-1 text-xs rounded border transition-all ${theirNeeds.has(item) ? 'bg-teal-600 text-white border-teal-600' : 'bg-white text-stone-600 border-stone-200 hover:border-teal-300'}`}>{item}</button>))}</div></div>))}</div>
+          <div className="p-4 bg-teal-50 border border-teal-200 rounded text-teal-900 font-medium text-center font-serif">相手があの行動をとっているのは、<br className="md:hidden"/><span className="font-bold text-teal-700 mx-1 border-b border-teal-400">{Array.from(theirNeeds).join('、') || '______'}</span><br className="md:hidden"/>というニーズを大切にしたいからかもしれません。</div>
+        </div>
+      </section>
+
+      <section className="page-break-avoid mb-12">
+        <SectionTitle number="03" title="私のニーズ（代償）" subtitle="My Needs" icon={ShieldAlert} colorClass="text-rose-800" />
+        <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-rose-300">
+          <div className="mb-6 text-sm text-stone-600 no-print"><p>一方で、その行動によって<strong>あなたのどんなニーズが損なわれていますか？</strong></p></div>
+          <div className="bg-rose-50/30 p-4 rounded-lg mb-4 no-print h-48 overflow-y-auto border border-rose-100">{Object.entries(needsData).map(([cat, items]) => (<div key={cat} className="mb-4"><h4 className="text-[10px] font-bold text-rose-400 uppercase tracking-widest mb-1">{cat}</h4><div className="flex flex-wrap gap-2">{items.map(item => (<button key={item} onClick={() => toggleSet(myNeeds, item, setMyNeeds)} className={`px-2 py-1 text-xs rounded border transition-all ${myNeeds.has(item) ? 'bg-rose-500 text-white border-rose-500' : 'bg-white text-stone-600 border-stone-200 hover:border-rose-300'}`}>{item}</button>))}</div></div>))}</div>
+          <div className="p-4 bg-rose-50 border border-rose-200 rounded text-rose-900 font-medium text-center font-serif">その行動によって、私の<br className="md:hidden"/><span className="font-bold text-rose-700 mx-1 border-b border-rose-400">{Array.from(myNeeds).join('、') || '______'}</span><br className="md:hidden"/>というニーズが満たされず、痛みを伴っています。</div>
+        </div>
+      </section>
+
+      <section className="page-break-avoid mb-12">
+        <SectionTitle number="04" title="第三の道（より良い方法）" subtitle="The Better Strategy" icon={Leaf} colorClass="text-emerald-800" />
+        <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-emerald-300">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-4 mb-6 text-center font-serif text-lg">
+            <div className="bg-teal-50 text-teal-800 px-4 py-2 rounded border border-teal-200 w-full md:w-auto">{opponentType === 'individual' ? '相手' : '組織'}：{Array.from(theirNeeds).join('・') || '...'}</div>
+            <div className="text-stone-400 font-bold">+</div>
+            <div className="bg-rose-50 text-rose-800 px-4 py-2 rounded border border-rose-200 w-full md:w-auto">私：{Array.from(myNeeds).join('・') || '...'}</div>
+          </div>
+          <div className="mb-4 bg-emerald-50 p-4 rounded border border-emerald-100 text-sm text-emerald-900 no-print"><span className="font-bold flex items-center gap-2 mb-2"><Sparkles size={16}/> 修復的創造</span>双方のニーズを満たし、かつ代償の少ない「別の方法」はありますか？</div>
+          <textarea value={newStrategy} onChange={(e) => setNewStrategy(e.target.value)} placeholder="より効果的で、代償の少ない具体的なアイデア..." className="w-full min-h-[80px] p-4 bg-emerald-50/30 border border-emerald-200 focus:border-emerald-400 focus:bg-white outline-none resize-y rounded-sm text-stone-800" />
+        </div>
+      </section>
+
+      <section className="page-break-avoid mb-12">
+        <SectionTitle number="05" title="招待（伝え方）" subtitle="Invitation" icon={MessageCircle} colorClass="text-indigo-800" />
+        <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-indigo-300">
+          <div className="p-6 bg-indigo-50/50 border border-indigo-200 rounded text-indigo-900 font-serif italic leading-relaxed mb-4 relative">
+             <Quote size={20} className="absolute top-3 left-3 text-indigo-200 rotate-180" />
+             「あなたが ______（行動）をしているのは、______（相手のニーズ）を大切にしたいからなんだね、と理解したよ。<br/><br/>ただ、それだと私の ______（私のニーズ）が満たされなくて、とてもつらいんだ。<br/><br/>だから、あなたの ______（相手のニーズ）も、私の ______（私のニーズ）も両方満たせるような、もっと良い方法を一緒に探してみない？」
+             <Quote size={20} className="absolute bottom-3 right-3 text-indigo-200" />
+          </div>
+          <textarea value={invitation} onChange={(e) => setInvitation(e.target.value)} placeholder="あなた自身の言葉で、相手への伝え方を書いてみましょう..." className="w-full min-h-[100px] p-4 bg-white border border-indigo-200 focus:border-indigo-400 outline-none resize-y rounded-sm text-stone-800" />
+        </div>
+      </section>
+    </div>
+  );
+};
+
+// ==========================================
+// MODE 5: MEDIATION MODE
+// ==========================================
+const MediationMode = () => {
+  const [personA, setPersonA] = useState('Aさん');
+  const [personB, setPersonB] = useState('Bさん');
+  const [obsA, setObsA] = useState('');
+  const [needsA, setNeedsA] = useState(new Set());
+  const [obsB, setObsB] = useState('');
+  const [needsB, setNeedsB] = useState(new Set());
+  const [step, setStep] = useState(1);
+
+  const toggleSet = (set, val, setter) => { const newSet = new Set(set); if (newSet.has(val)) newSet.delete(val); else newSet.add(val); setter(newSet); };
+
+  return (
+    <div className="animate-in fade-in duration-500">
+      <div className="mb-12 text-center no-print">
+        <div className="bg-indigo-50/50 p-6 rounded-lg border border-indigo-100 max-w-2xl mx-auto"><p className="text-indigo-900 font-bold text-lg mb-2 font-serif">早いうちに方向を変えなきゃ、今のままで終わっちまうぞ。</p><p className="text-indigo-700/60 text-xs">── アーウィン・コーリー</p></div>
+        <p className="text-stone-500 text-sm mt-4 leading-relaxed">対立する二人の間に立ち、お互いの言い分を「ニーズ」に翻訳して伝え返す仲裁プロセスです。</p>
+      </div>
+      <div className="flex gap-4 mb-8 justify-center no-print"><input value={personA} onChange={e => setPersonA(e.target.value)} className="text-center border-b border-stone-300 outline-none font-bold text-rose-700 w-32" placeholder="Aさんの名前"/><span className="text-stone-300 self-center"><GitCompare size={20}/></span><input value={personB} onChange={e => setPersonB(e.target.value)} className="text-center border-b border-stone-300 outline-none font-bold text-teal-700 w-32" placeholder="Bさんの名前"/></div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className={`transition-all duration-500 ${step === 1 || step === 4 || step === 5 ? 'opacity-100' : 'opacity-50 blur-[1px]'}`}>
+          <div className="bg-white p-6 rounded-lg border-t-4 border-rose-400 shadow-sm h-full"><h3 className="font-bold text-rose-800 flex items-center gap-2 mb-4"><Users size={18}/> {personA}の言い分</h3><div className="mb-4"><label className="block text-xs font-bold text-rose-600 mb-1">1. 何があった？（観察）</label><textarea value={obsA} onChange={e => setObsA(e.target.value)} placeholder={`${personB}に何をされた？`} className="w-full p-3 bg-rose-50/30 border border-rose-100 rounded text-sm outline-none min-h-[60px]"/></div><div className="mb-4"><label className="block text-xs font-bold text-rose-600 mb-1">2. 大切なニーズは？</label><div className="h-40 overflow-y-auto bg-rose-50/30 border border-rose-100 rounded p-2">{Object.entries(needsData).map(([cat, items]) => (<div key={cat} className="mb-2"><h4 className="text-[10px] font-bold text-stone-400">{cat}</h4><div className="flex flex-wrap gap-1">{items.map(item => (<button key={item} onClick={() => toggleSet(needsA, item, setNeedsA)} className={`px-2 py-0.5 text-[10px] rounded border ${needsA.has(item) ? 'bg-rose-500 text-white' : 'bg-white text-stone-500'}`}>{item}</button>))}</div></div>))}</div></div><div className="p-3 bg-rose-50 rounded border border-rose-200 text-rose-900 text-sm font-serif">「私は、<span className="font-bold border-b border-rose-400 mx-1">{Array.from(needsA).join('・') || '____'}</span>を大切にしたい！」</div></div>
+        </div>
+        <div className={`transition-all duration-500 ${step === 2 || step === 3 || step === 5 ? 'opacity-100' : 'opacity-50 blur-[1px]'}`}>
+          <div className="bg-white p-6 rounded-lg border-t-4 border-teal-400 shadow-sm h-full"><h3 className="font-bold text-teal-800 flex items-center gap-2 mb-4"><Users size={18}/> {personB}の言い分</h3><div className="mb-4"><label className="block text-xs font-bold text-teal-600 mb-1">1. 何があった？（観察）</label><textarea value={obsB} onChange={e => setObsB(e.target.value)} placeholder={`${personA}に何をされた？`} className="w-full p-3 bg-teal-50/30 border border-teal-100 rounded text-sm outline-none min-h-[60px]"/></div><div className="mb-4"><label className="block text-xs font-bold text-teal-600 mb-1">2. 大切なニーズは？</label><div className="h-40 overflow-y-auto bg-teal-50/30 border border-teal-100 rounded p-2">{Object.entries(needsData).map(([cat, items]) => (<div key={cat} className="mb-2"><h4 className="text-[10px] font-bold text-stone-400">{cat}</h4><div className="flex flex-wrap gap-1">{items.map(item => (<button key={item} onClick={() => toggleSet(needsB, item, setNeedsB)} className={`px-2 py-0.5 text-[10px] rounded border ${needsB.has(item) ? 'bg-teal-600 text-white' : 'bg-white text-stone-500'}`}>{item}</button>))}</div></div>))}</div></div><div className="p-3 bg-teal-50 rounded border border-teal-200 text-teal-900 text-sm font-serif">「僕は、<span className="font-bold border-b border-teal-400 mx-1">{Array.from(needsB).join('・') || '____'}</span>を大切にしたい！」</div></div>
+        </div>
+      </div>
+      <div className="mt-8 bg-stone-800 text-stone-100 p-6 rounded-lg shadow-lg max-w-3xl mx-auto relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rose-500 via-stone-500 to-teal-500"></div>
+        <div className="flex items-center gap-3 mb-4"><Ear size={24} className="text-stone-400" /><h4 className="font-bold text-lg">仲裁者のガイド</h4></div>
+        <div className="space-y-4">
+          {step === 1 && (<div><p className="text-rose-300 font-bold mb-2">Step 1: {personA}の話を聴く</p><p className="text-sm mb-4">{personA}の言い分（不満）をニーズに翻訳します。</p><button onClick={() => setStep(2)} className="bg-stone-100 text-stone-900 px-6 py-2 rounded-full font-bold hover:bg-white flex items-center gap-2 mx-auto">{personB}に伝え返しをお願いする <ArrowRight size={16}/></button></div>)}
+          {step === 2 && (<div><p className="text-teal-300 font-bold mb-2">Step 2: {personB}による伝え返し</p><p className="text-sm mb-2">{personB}に尋ねる：「{personA}は『<span className="text-rose-400 font-bold">{Array.from(needsA).join('・')}</span>が大切だ』と言っていたように聞こえたかな？」</p><button onClick={() => setStep(3)} className="bg-stone-100 text-stone-900 px-6 py-2 rounded-full font-bold hover:bg-white flex items-center gap-2 mx-auto">次は{personB}の話へ <ArrowRight size={16}/></button></div>)}
+          {step === 3 && (<div><p className="text-teal-300 font-bold mb-2">Step 3: {personB}の話を聴く</p><p className="text-sm mb-4">{personB}の番です。ニーズを明確にします。</p><button onClick={() => setStep(4)} className="bg-stone-100 text-stone-900 px-6 py-2 rounded-full font-bold hover:bg-white flex items-center gap-2 mx-auto">{personA}に伝え返しをお願いする <ArrowRight size={16}/></button></div>)}
+          {step === 4 && (<div><p className="text-rose-300 font-bold mb-2">Step 4: {personA}による伝え返し</p><p className="text-sm mb-2">{personA}に尋ねる：「{personB}は『<span className="text-teal-400 font-bold">{Array.from(needsB).join('・')}</span>が大切だ』と言っていたように聞こえたかな？」</p><button onClick={() => setStep(5)} className="bg-stone-100 text-stone-900 px-6 py-2 rounded-full font-bold hover:bg-white flex items-center gap-2 mx-auto">解決策へ <ArrowRight size={16}/></button></div>)}
+          {step === 5 && (<div className="text-center"><p className="text-yellow-300 font-bold mb-2 flex items-center justify-center gap-2"><Sparkles size={18}/> Step 5: 第三の道</p><p className="text-sm mb-4">お互いのニーズ（<span className="text-rose-400">{Array.from(needsA).join('・')}</span> と <span className="text-teal-400">{Array.from(needsB).join('・')}</span>）の両方を満たす方法は？</p><textarea className="w-full bg-stone-900 border border-stone-600 rounded p-3 text-stone-100 h-24" placeholder="具体的なアクションプラン..." /></div>)}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ==========================================
+// MODE 6: BREAKTHROUGH MODE
+// ==========================================
+const BreakthroughMode = () => {
+  const [attack, setAttack] = useState('');
+  const [reaction, setReaction] = useState('');
+  const [coreNeed, setCoreNeed] = useState('');
+  const [response, setResponse] = useState('');
+  const [step, setStep] = useState(1);
+
+  return (
+    <div className="animate-in fade-in duration-500">
+      <div className="mb-12 text-center no-print">
+        <div className="bg-red-50/50 p-6 rounded-lg border border-red-100 max-w-2xl mx-auto">
+          <p className="text-red-900 font-bold text-lg mb-2 font-serif">
+            今となっては、選択肢は、変わるか変わらないか、ではない。<br/>
+            よいほうへ変わるか、悪いほうへ変わるか、なのだ。
+          </p>
+          <p className="text-red-700/60 text-xs">── クリフォード・ヒュー・ダグラス</p>
+        </div>
+        <p className="text-stone-500 text-sm mt-4 leading-relaxed">
+          相手が敵対的で、聞く耳を持たない「危機的状況」において、<br/>
+          「言い負かす（Debate）」から「理解する（Connect）」へ、劇的にシフトするためのモードです。
+        </p>
+      </div>
+
+      {/* STEP 1: THE ATTACK */}
+      <section className={`page-break-avoid mb-12 transition-all ${step >= 1 ? 'opacity-100' : 'opacity-50'}`}>
+        <SectionTitle number="01" title="攻撃を受ける" subtitle="The Attack" icon={Flame} colorClass="text-red-800" />
+        <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-red-400">
+          <div className="mb-4 text-sm text-stone-600 no-print">
+            <p className="font-bold mb-2 flex items-center gap-2"><Siren size={16} className="text-red-500"/> 緊急事態</p>
+            相手はあなたにどんな言葉を投げつけていますか？（拒絶、侮辱、脅しなど）
+          </div>
+          <textarea 
+            value={attack} 
+            onChange={(e) => { setAttack(e.target.value); if(step===1) setStep(2); }} 
+            placeholder="例：「白人の教えなんていらない、金をよこせ」「お前らには関係ない、帰れ」"
+            className="w-full min-h-[80px] p-4 bg-red-50/30 border border-red-200 focus:border-red-400 focus:bg-white outline-none resize-y rounded-sm text-red-900"
+          />
+        </div>
+      </section>
+
+      {/* STEP 2: THE TRAP */}
+      {step >= 2 && (
+        <section className="page-break-avoid mb-12 animate-in fade-in slide-in-from-bottom-4">
+          <SectionTitle number="02" title="私の反応（罠）" subtitle="The Trap: Debate & Defend" icon={XCircle} colorClass="text-stone-600" />
+          <div className="bg-stone-100 p-6 rounded-sm shadow-inner border border-stone-200">
+            <p className="font-bold text-stone-700 mb-3 text-center">その瞬間、あなたの内面で何が起きましたか？</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <button onClick={() => setReaction('fight')} className={`p-4 bg-white border rounded text-left hover:bg-red-50 ${reaction === 'fight' ? 'ring-2 ring-red-400' : ''}`}>
+                <span className="block font-bold text-red-800 mb-1">💢 言い負かしたい</span>
+                <span className="text-xs text-stone-500">「それは違う」「誤解だ」と論破・説得しようとした。</span>
+              </button>
+              <button onClick={() => setReaction('flight')} className={`p-4 bg-white border rounded text-left hover:bg-stone-200 ${reaction === 'flight' ? 'ring-2 ring-stone-400' : ''}`}>
+                <span className="block font-bold text-stone-800 mb-1">😨 逃げたい / 固まる</span>
+                <span className="text-xs text-stone-500">恐怖で何も言えなくなる。または迎合しようとする。</span>
+              </button>
+            </div>
+            {reaction && (
+              <div className="text-center">
+                <p className="text-xs text-stone-500 mb-4">※マーシャルも最初は言い負かそうとして失敗しました。気づいたら、止まればいいのです。</p>
+                <button onClick={() => setStep(3)} className="bg-stone-800 text-white px-6 py-2 rounded-full font-bold hover:scale-105 transition-transform">
+                  立ち止まり、シフトする <RefreshCcw size={16} className="inline ml-2"/>
+                </button>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* STEP 3: THE SHIFT */}
+      {step >= 3 && (
+        <section className="page-break-avoid mb-12 animate-in fade-in slide-in-from-bottom-4">
+          <div className="flex justify-center mb-8">
+            <div className="bg-gradient-to-r from-red-500 to-indigo-600 h-1 w-full max-w-md rounded-full relative">
+              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-white border border-stone-200 px-3 py-1 rounded-full text-xs font-bold shadow-sm">
+                PARADIGM SHIFT
+              </div>
+            </div>
+          </div>
+
+          <SectionTitle number="03" title="一点突破（翻訳）" subtitle="The One-Point Connection" icon={Zap} colorClass="text-indigo-800" />
+          <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-indigo-400">
+            <div className="mb-4 no-print">
+              <p className="text-sm text-stone-600 leading-relaxed">
+                相手の攻撃的な言葉（手段）を無視し、その奥にある<strong>「たった一つの切実なニーズ」</strong>に賭けてみましょう。<br/>
+                例：「金をよこせ」→「これまでの苦しみへの<strong>リスペクト</strong>」や「<strong>埋め合わせ</strong>」？
+              </p>
+              <NeedsGuide />
+            </div>
+            
+            <div className="mb-4">
+              <label className="block text-xs font-bold text-indigo-700 mb-1">相手が本当に叫んでいるニーズ（予測）</label>
+              <input 
+                type="text" 
+                value={coreNeed} 
+                onChange={(e) => setCoreNeed(e.target.value)} 
+                placeholder="例：リスペクト、理解、自律性、生存..."
+                className="w-full p-3 border-b-2 border-indigo-200 focus:border-indigo-500 outline-none text-lg font-serif text-center text-indigo-900 bg-indigo-50/30"
+              />
+            </div>
+
+            <div className="text-center mt-6">
+              <button onClick={() => setStep(4)} className="text-indigo-600 border border-indigo-600 px-6 py-2 rounded-full font-bold hover:bg-indigo-50 transition-colors" disabled={!coreNeed}>
+                このニーズを確認する言葉を作る <ArrowDown size={16} className="inline ml-1"/>
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* STEP 4: THE RESPONSE */}
+      {step >= 4 && (
+        <section className="page-break-avoid mb-12 animate-in fade-in slide-in-from-bottom-4">
+          <SectionTitle number="04" title="共感的応答" subtitle="Empathic Response" icon={MessageCircle} colorClass="text-stone-800" />
+          <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-stone-800">
+            <div className="p-6 bg-stone-100 border border-stone-300 rounded text-stone-800 font-serif italic leading-relaxed mb-4 relative">
+               <Quote size={20} className="absolute top-3 left-3 text-stone-300 rotate-180" />
+               「つまり、君は ______（攻撃的な言葉）と言うことで、<br/>
+               <span className="text-indigo-700 font-bold text-xl mx-1">{coreNeed}</span><br/>
+               を求めている（大切にしたい）、ということなんだね？」
+               <Quote size={20} className="absolute bottom-3 right-3 text-stone-300" />
+            </div>
+            <p className="text-xs text-stone-500 text-center mb-4">
+              ※同意する必要はありません。ただ「あなたのニーズを理解した」と伝えるだけで、相手の攻撃性は劇的に下がります。
+            </p>
+            <textarea 
+              value={response} 
+              onChange={(e) => setResponse(e.target.value)} 
+              placeholder="あなた自身の言葉で、相手への確認の言葉を書いてみましょう..." 
+              className="w-full min-h-[80px] p-4 bg-white border border-stone-300 focus:border-indigo-500 outline-none resize-y rounded-sm" 
+            />
+          </div>
+        </section>
+      )}
+    </div>
+  );
+};
+
+// ==========================================
+// MODE 7: SOCIAL VISION MODE
+// ==========================================
+const SocialVisionMode = () => {
+  const [system, setSystem] = useState('');
+  const [visionNeeds, setVisionNeeds] = useState(new Set());
+  const [action, setAction] = useState('');
+  
+  const toggleSet = (set, val, setter) => {
+    const newSet = new Set(set);
+    if (newSet.has(val)) newSet.delete(val); else newSet.add(val);
+    setter(newSet);
+  };
+
+  return (
+    <div className="animate-in fade-in duration-500">
+      <div className="mb-12 text-center no-print">
+        <div className="bg-fuchsia-50/50 p-6 rounded-lg border border-fuchsia-100 max-w-2xl mx-auto">
+          <p className="text-fuchsia-900 font-bold text-lg mb-2 font-serif">
+            行動のないビジョンは夢にすぎず、ビジョンのない行動は暇つぶしにすぎない。<br/>行動をともなうビジョンが、世界を変える。
+          </p>
+          <p className="text-fuchsia-700/60 text-xs">── ジョエル・バーカー</p>
+        </div>
+        <p className="text-stone-500 text-sm mt-4 leading-relaxed">
+          社会の「ギャング的な構造（報復的司法など）」を変えるためのエネルギーを蓄え、<br/>
+          具体的な一歩を踏み出すためのビジョン・ワークです。
+        </p>
+      </div>
+
+      {/* STEP 1: IDENTIFY THE SYSTEM */}
+      <section className="page-break-avoid mb-12">
+        <SectionTitle number="01" title="変えたい構造" subtitle="The System/Institution" icon={Building2} colorClass="text-stone-800" />
+        <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-stone-300">
+          <div className="mb-4 text-sm text-stone-600 no-print">
+            <p>
+              あなたの気に入らない、あるいは痛みを伴う「社会的な仕組み」や「制度」は何ですか？<br/>
+              （例：学校のテスト制度、職場の評価システム、国の司法制度、家庭内の性別役割分担）
+            </p>
+          </div>
+          <textarea 
+            value={system} 
+            onChange={(e) => setSystem(e.target.value)}
+            placeholder="変革が必要なシステム..."
+            className="w-full min-h-[60px] p-3 bg-stone-50 border border-stone-200 focus:bg-white outline-none rounded-sm"
+          />
+        </div>
+      </section>
+
+      {/* STEP 2: THE VISION (NEEDS) */}
+      <section className="page-break-avoid mb-12">
+        <SectionTitle number="02" title="ビジョンを描く" subtitle="The Vision (Met Needs)" icon={Flag} colorClass="text-fuchsia-800" />
+        <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-fuchsia-300">
+          <div className="mb-4 text-sm text-stone-600 no-print">
+            <p className="mb-2">そのシステムが変わったとき、そこで暮らす人々の<strong>どんなニーズが満たされていますか？</strong><br/>「悪いことがなくなる」ではなく「良いことが起きている」状態を描きます。</p>
+            <div className="h-40 overflow-y-auto bg-fuchsia-50/30 border border-fuchsia-100 rounded p-2">
+              {Object.entries(needsData).map(([cat, items]) => (
+                <div key={cat} className="mb-2">
+                  <h4 className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">{cat}</h4>
+                  <div className="flex flex-wrap gap-1">
+                    {items.map(item => (
+                      <button key={item} onClick={() => toggleSet(visionNeeds, item, setVisionNeeds)} className={`px-2 py-0.5 text-[10px] rounded border ${visionNeeds.has(item) ? 'bg-fuchsia-600 text-white' : 'bg-white text-stone-500'}`}>{item}</button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="p-4 bg-fuchsia-50 border border-fuchsia-200 rounded text-fuchsia-900 font-medium text-center font-serif">
+            私のビジョンは、<br className="md:hidden"/>
+            <span className="font-bold text-fuchsia-700 mx-1 border-b border-fuchsia-400">{Array.from(visionNeeds).join('・') || '______'}</span>
+            <br className="md:hidden"/>
+            が大切にされる社会（組織）です。
+          </div>
+        </div>
+      </section>
+
+      {/* STEP 3: CONCRETE ACTION */}
+      <section className="page-break-avoid mb-12">
+        <SectionTitle number="03" title="最初の一歩" subtitle="Concrete Action" icon={Footprints} colorClass="text-emerald-800" />
+        <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-emerald-300">
+          <div className="mb-4 text-sm text-stone-600 no-print">
+            <p className="font-bold text-emerald-700 mb-2 flex items-center gap-2"><StickyNote size={16}/> アクション・メモ</p>
+            <p>そのビジョンに近づくために、<strong>「明日できる具体的な行動」</strong>を1つだけ決めてください。<br/>（例：関係者に手紙を書く、勉強会を開く、まずは隣人に挨拶する）</p>
+          </div>
+          <textarea 
+            value={action} 
+            onChange={(e) => setAction(e.target.value)}
+            placeholder="私がとる具体的な行動は..."
+            className="w-full min-h-[80px] p-3 bg-emerald-50/30 border border-emerald-200 focus:bg-white outline-none rounded-sm text-emerald-900"
+          />
+        </div>
+      </section>
+
+      {/* STEP 4: COMMITMENT CARD */}
+      <div className="mx-auto max-w-md mt-8 transform rotate-1 hover:rotate-0 transition-transform duration-500">
+        <div className="bg-yellow-100 p-6 shadow-lg border border-yellow-200 relative font-serif text-stone-800">
+          <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 w-32 h-8 bg-yellow-200/50 rotate-[-2deg]"></div>
+          <h4 className="text-center text-xs font-bold uppercase tracking-[0.3em] text-stone-400 mb-4">My Commitment</h4>
+          <p className="text-lg text-center mb-6 leading-relaxed">
+            私は、<span className="font-bold border-b-2 border-stone-400/50">{Array.from(visionNeeds).join('・') || '______'}</span><br/>
+            のある世界をつくるために、
+          </p>
+          <p className="text-xl font-bold text-center mb-6 text-stone-900">
+            「{action || '行動する'}」
+          </p>
+          <p className="text-right text-xs text-stone-500">
+            {new Date().toLocaleDateString()}
+          </p>
+        </div>
+        <p className="text-center text-xs text-stone-400 mt-4 no-print">
+          ※このカードを印刷するか、書き写して目に見える場所に貼っておきましょう。
+        </p>
+      </div>
+
+    </div>
+  );
+};
+
+// ==========================================
+// MODE 8: ENEMY IMAGE TRANSFORMATION MODE
+// ==========================================
+const EnemyImageMode = () => {
+  const [label, setLabel] = useState('');
+  const [enemyNeeds, setEnemyNeeds] = useState(new Set());
+  const [rolePlay, setRolePlay] = useState('');
+  const [step, setStep] = useState(1);
+
+  const toggleSet = (set, val, setter) => {
+    const newSet = new Set(set);
+    if (newSet.has(val)) newSet.delete(val); else newSet.add(val);
+    setter(newSet);
+  };
+
+  return (
+    <div className="animate-in fade-in duration-500">
+      <div className="mb-12 text-center no-print">
+        <div className="bg-purple-50/50 p-6 rounded-lg border border-purple-100 max-w-2xl mx-auto">
+          <p className="text-purple-900 font-bold text-lg mb-2 font-serif">
+            わたしたちの世代における最大の革命は、人間の革命だ。<br/>心という内側の態度を変えることによって、自分を取り巻く外側の世界を変えられるのだから。
+          </p>
+          <p className="text-purple-700/60 text-xs">── マリリン・ファーガソン</p>
+        </div>
+        <p className="text-stone-500 text-sm mt-4 leading-relaxed">
+          相手を「敵（モンスター）」として見る眼鏡を外し、<br/>
+          「同じニーズを持った人間」として再認識するためのプロセスです。
+        </p>
+      </div>
+
+      {/* STEP 1: IDENTIFY THE ENEMY IMAGE */}
+      <section className="page-break-avoid mb-12">
+        <SectionTitle number="01" title="敵のイメージ" subtitle="The Enemy Image" icon={Ghost} colorClass="text-stone-800" />
+        <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-stone-300">
+          <div className="mb-6">
+            <label className="block text-sm font-bold text-stone-700 mb-2">あなたが「敵」だと思っている人に対して、どんなレッテル（診断）を貼っていますか？</label>
+            <textarea 
+              value={label} 
+              onChange={(e) => setLabel(e.target.value)}
+              placeholder="例：あいつは強欲だ。冷酷だ。わがままだ。狂っている。"
+              className="w-full min-h-[60px] p-3 bg-stone-50 border border-stone-200 focus:bg-white outline-none rounded-sm text-stone-800"
+            />
+          </div>
+          <p className="text-xs text-stone-500">※正直に吐き出してください。そのイメージを持っていることを認めるのが第一歩です。</p>
+        </div>
+      </section>
+
+      {/* STEP 2: HUMANIZING (NEEDS) */}
+      <section className="page-break-avoid mb-12">
+        <SectionTitle number="02" title="人間性への翻訳" subtitle="Humanizing the Enemy" icon={Heart} colorClass="text-purple-800" />
+        <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-purple-300">
+          <div className="mb-4 text-sm text-stone-600 no-print">
+            <p className="mb-2">
+              その人は「悪人」だからそうしているのではなく、何かを切実に必要としている「人間」です。<br/>
+              その行動の裏にある、<strong>彼らの満たされないニーズ（痛み）</strong>は何でしょうか？
+            </p>
+            <div className="h-40 overflow-y-auto bg-purple-50/30 border border-purple-100 rounded p-2">
+              {Object.entries(needsData).map(([cat, items]) => (
+                <div key={cat} className="mb-2">
+                  <h4 className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">{cat}</h4>
+                  <div className="flex flex-wrap gap-1">
+                    {items.map(item => (
+                      <button key={item} onClick={() => toggleSet(enemyNeeds, item, setEnemyNeeds)} className={`px-2 py-0.5 text-[10px] rounded border ${enemyNeeds.has(item) ? 'bg-purple-600 text-white' : 'bg-white text-stone-500'}`}>{item}</button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="p-4 bg-purple-50 border border-purple-200 rounded text-purple-900 font-medium text-center font-serif">
+            あの人が本当に求めているのは、<br className="md:hidden"/>
+            <span className="font-bold text-purple-700 mx-1 border-b border-purple-400">{Array.from(enemyNeeds).join('・') || '______'}</span>
+            <br className="md:hidden"/>
+            なのかもしれません。
+          </div>
+        </div>
+      </section>
+
+      {/* STEP 3: ROLE REVERSAL */}
+      <section className="page-break-avoid mb-12">
+        <SectionTitle number="03" title="役割交換" subtitle="Role Reversal" icon={Repeat} colorClass="text-indigo-800" />
+        <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-indigo-300">
+          <div className="mb-6 text-sm text-stone-600 no-print">
+            <p className="font-bold text-indigo-800 mb-2 flex items-center gap-2"><Users size={16}/> なりきりワーク</p>
+            <p>
+              想像してみてください。あなたがその人の生い立ち、環境、恐れをすべて背負っているとしたら。<br/>
+              <strong>「相手になりきって」</strong>、その苦しみや願いを一人称（「私は…」）で語ってみましょう。
+            </p>
+          </div>
+          <textarea 
+            value={rolePlay} 
+            onChange={(e) => setRolePlay(e.target.value)}
+            placeholder="（相手になりきって）「私は怖いんだ…。誰も私の言うことを聞いてくれないから、大声を出すしかないんだ…」"
+            className="w-full min-h-[100px] p-4 bg-indigo-50/30 border border-indigo-200 focus:border-indigo-400 focus:bg-white outline-none resize-y rounded-sm text-stone-800 font-serif italic"
+          />
+        </div>
+      </section>
+
+      {/* STEP 4: CONNECTION CHECK */}
+      <div className="mx-4 md:mx-8 mb-8 p-6 bg-white border-2 border-stone-800 text-center shadow-[4px_4px_0px_0px_rgba(68,64,60,1)] print:border print:shadow-none">
+          <div className="text-xs font-bold text-stone-400 uppercase tracking-widest mb-4 flex items-center justify-center gap-2"><Handshake size={16} /> Connection Insight</div>
+          <p className="text-lg md:text-xl font-medium text-stone-800 font-serif leading-relaxed">
+            「相手の犠牲の上に、自分だけが恩恵を得ることはできない」<br/>
+            <span className="text-sm text-stone-500 mt-4 block">
+              敵のイメージが消えたとき、解決不能に見えた問題も、人間同士の対話に変わります。
+            </span>
+          </p>
+      </div>
+
+    </div>
+  );
+};
+
+
+const NvcUltimateEdition = () => {
+  const [mindset, setMindset] = useState(null); 
+  const [mode, setMode] = useState('dialogue');
+
+  const clearAll = () => {
+    if (window.confirm('入力内容をすべてリセットしますか？')) {
+      window.location.reload();
+    }
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  if (!mindset) {
+    return (
+      <div className="min-h-screen bg-[#333] text-[#faf9f6] font-serif flex items-center justify-center p-4">
+        <div className="max-w-2xl text-center space-y-8 animate-in fade-in duration-1000">
+          <Quote size={40} className="mx-auto text-stone-500 mb-4 rotate-180" />
+          <p className="text-xl md:text-3xl leading-relaxed font-medium">
+            世界がよい方向に変化するのは、<br/>
+            とにかく世界の現状にこれ以上うんざりするのにもううんざりだ、と人々が感じて、<br/>
+            自分を変えようと決心したときである。
+          </p>
+          <p className="text-stone-400 text-sm">── シドニー・マッドウェッド</p>
+          
+          <div className="pt-12">
+            <p className="text-stone-300 mb-6 text-sm">今日、あなたはどちらのゲームを選びますか？</p>
+            <div className="flex flex-col md:flex-row gap-6 justify-center">
+              <button 
+                onClick={() => setMindset('domination')}
+                className="px-8 py-4 border border-stone-600 rounded-lg text-stone-400 hover:bg-stone-800 hover:text-white transition-all opacity-50 hover:opacity-100"
+              >
+                <span className="block font-bold text-lg mb-1">支配のゲーム</span>
+                <span className="text-xs">正しさ、賞罰、義務、恐怖</span>
+              </button>
+              
+              <button 
+                onClick={() => setMindset('partnership')}
+                className="px-8 py-4 bg-[#faf9f6] text-[#333] rounded-lg hover:scale-105 transition-all shadow-lg ring-2 ring-emerald-500/50"
+              >
+                <span className="block font-bold text-lg mb-1">生命のゲーム</span>
+                <span className="text-xs">つながり、選択、喜び、共感</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-[#fffdfa] text-[#333] font-serif selection:bg-stone-200 selection:text-stone-800 pb-32">
+      <style>{`
+        body { font-family: "Shippori Mincho", "Yu Mincho", serif; }
+        textarea { font-family: "Shippori Mincho", serif; }
+        .sans-serif { font-family: ui-sans-serif, system-ui, sans-serif; }
+        @media print {
+          @page { margin: 12mm; size: auto; }
+          body { background: white !important; }
+          .no-print { display: none !important; }
+          .print-only { display: block !important; }
+          .page-break-avoid { page-break-inside: avoid; }
+          textarea { border: none !important; resize: none; overflow: hidden; padding: 0; min-height: auto; }
+        }
+        .print-only { display: none; }
+      `}</style>
+
+      <header className="sticky top-0 z-50 bg-[#fffdfa]/90 backdrop-blur-md border-b border-stone-200 no-print transition-all duration-300 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-stone-800 text-white rounded-sm flex items-center justify-center shadow-sm">
+              <span className="font-bold text-sm">NVC</span>
+            </div>
+            <h1 className="text-sm font-bold tracking-widest text-stone-800">プロセス・ナビゲーター</h1>
+          </div>
+
+          {/* SCROLLABLE MODE SWITCHER */}
+          <div className="flex overflow-x-auto pb-2 md:pb-0 w-full md:w-auto no-scrollbar gap-2 px-2">
+            <button onClick={() => setMode('dialogue')} className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition-all ${mode === 'dialogue' ? 'bg-stone-800 text-white shadow-sm' : 'bg-stone-100 text-stone-500 hover:text-stone-700'}`}><Users size={14} />対人</button>
+            <button onClick={() => setMode('self-empathy')} className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition-all ${mode === 'self-empathy' ? 'bg-emerald-700 text-white shadow-sm' : 'bg-stone-100 text-stone-500 hover:text-stone-700'}`}><Flower2 size={14} />自己</button>
+            <button onClick={() => setMode('healing')} className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition-all ${mode === 'healing' ? 'bg-orange-700 text-white shadow-sm' : 'bg-stone-100 text-stone-500 hover:text-stone-700'}`}><Sun size={14} />癒やし</button>
+            <button onClick={() => setMode('enemy-image')} className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition-all ${mode === 'enemy-image' ? 'bg-purple-700 text-white shadow-sm' : 'bg-stone-100 text-stone-500 hover:text-stone-700'}`}><Ghost size={14} />敵対解消</button>
+            <button onClick={() => setMode('restorative')} className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition-all ${mode === 'restorative' ? 'bg-teal-700 text-white shadow-sm' : 'bg-stone-100 text-stone-500 hover:text-stone-700'}`}><RefreshCcw size={14} />修復</button>
+            <button onClick={() => setMode('mediation')} className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition-all ${mode === 'mediation' ? 'bg-indigo-700 text-white shadow-sm' : 'bg-stone-100 text-stone-500 hover:text-stone-700'}`}><Handshake size={14} />仲裁</button>
+            <button onClick={() => setMode('breakthrough')} className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition-all ${mode === 'breakthrough' ? 'bg-red-700 text-white shadow-sm' : 'bg-stone-100 text-stone-500 hover:text-stone-700'}`}><Flame size={14} />危機</button>
+            <button onClick={() => setMode('social')} className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition-all ${mode === 'social' ? 'bg-fuchsia-700 text-white shadow-sm' : 'bg-stone-100 text-stone-500 hover:text-stone-700'}`}><Globe size={14} />社会変革</button>
+          </div>
+
+          <div className="flex gap-3 shrink-0">
+            <button onClick={() => setMindset(null)} className="p-2 text-stone-400 hover:text-stone-700" title="マインドセット選択に戻る"><Globe size={18}/></button>
+            <button onClick={clearAll} className="p-2 text-stone-500 hover:bg-stone-100 rounded-full transition-colors" title="リセット"><RefreshCw size={18} /></button>
+            <button onClick={handlePrint} className="flex items-center gap-2 px-5 py-2 bg-stone-800 text-white text-sm rounded-full shadow hover:bg-stone-700 transition-colors"><Printer size={16} /><span>出力</span></button>
+          </div>
+        </div>
+      </header>
+
+      <main className="max-w-5xl mx-auto px-6 pt-12 pb-24">
+        {mindset === 'domination' ? (
+          <div className="text-center py-20 text-stone-500">
+            <Lock size={48} className="mx-auto mb-4 text-stone-300"/>
+            <h2 className="text-2xl font-bold mb-4">支配のゲームへようこそ</h2>
+            <p>正しさを証明し、間違いを罰する道です。<br/>NVCのツールはここでは機能しません。</p>
+            <button onClick={() => setMindset('partnership')} className="mt-8 text-emerald-600 underline hover:text-emerald-800">生命のゲームへ切り替える</button>
+          </div>
+        ) : (
+          <>
+            {mode === 'dialogue' && <DialogueMode />}
+            {mode === 'self-empathy' && <SelfEmpathyMode />}
+            {mode === 'healing' && <HealingMode />}
+            {mode === 'enemy-image' && <EnemyImageMode />}
+            {mode === 'restorative' && <RestorativeMode />}
+            {mode === 'mediation' && <MediationMode />}
+            {mode === 'breakthrough' && <BreakthroughMode />}
+            {mode === 'social' && <SocialVisionMode />}
+          </>
+        )}
+
+        <div className="border-t border-stone-200 pt-12 mt-12 text-center text-stone-400 text-xs font-serif tracking-widest print:hidden">
+          <p>Liberating from Domination Culture to Life-Enriching Partnership.</p>
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default NvcUltimateEdition;
