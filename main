@@ -1,0 +1,367 @@
+import React, { useState, useMemo, useEffect } from 'react';
+import { Printer, RefreshCw, PenTool, Heart, Anchor, MessageCircle, ArrowDown, Quote, Eye, AlertCircle, CheckCircle2, Lightbulb, ArrowRight, ShieldAlert, Users, Sparkles, Brain, Flower2, XCircle, Skull, Sun, Feather, Sunrise, Scale, Ear, Zap, Music, Wind, Hourglass } from 'lucide-react';
+
+// --- Google Fonts (Shippori Mincho) ---
+const fontLink = document.createElement('link');
+fontLink.href = 'https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;700;900&display=swap';
+fontLink.rel = 'stylesheet';
+document.head.appendChild(fontLink);
+
+// --- Data Definitions (Feelings & Needs) ---
+const feelingsData = {
+  satisfied: {
+    label: "満たされている（快）",
+    description: "ニーズが満たされたことによる喜びや活力",
+    categories: {
+      "愛情・親しみ": ["愛情に満ちた", "親しみのある", "やさしい", "あたたかさのある", "オープンな", "心を開いた"],
+      "喜び・幸福": ["幸福感", "大喜びする", "喜びに満ちた", "嬉しい", "楽しい", "満足している"],
+      "感謝・感動": ["感謝している", "ありがたい", "感動している", "感激の", "心に触れた"],
+      "活力・熱中": ["力がみなぎる", "夢中だ", "わくわくする", "生き生きした", "情熱的な", "刺激される"],
+      "平安・安心": ["安心だ", "ほっとする", "落ち着いた", "穏やかな", "リラックスした", "信頼している"],
+      "休息・回復": ["すっきりした", "休息のとれた", "さわやかな", "晴れ晴れした"]
+    }
+  },
+  unsatisfied: {
+    label: "満たされていない（不快）",
+    description: "ニーズが満たされていないことによる警鐘",
+    categories: {
+      "恐れ・不安": ["こわい", "心配で", "不安な", "落ち着かない", "おびえた", "疑い深い"],
+      "怒り・嫌悪": ["イライラ", "怒っている", "腹が立つ", "むかつく", "不機嫌", "憤慨する"],
+      "混乱・困惑": ["混乱した", "困惑する", "迷っている", "途方に暮れる", "訳が分からない"],
+      "悲しみ・痛み": ["悲しい", "傷ついた", "落ち込んだ", "がっかりした", "失望した", "寂しい"],
+      "疲労・無力": ["疲れた", "うんざり", "無力感", "圧倒された", "やる気が出ない", "消耗した"],
+      "恥・自責": ["恥ずかしい", "情けない", "申し訳ない", "気まずい", "後悔した"]
+    }
+  }
+};
+
+const needsRawData = `
+つながり,受け入れられること
+つながり,愛情
+つながり,認めてもらうこと
+つながり,所属・帰属意識
+つながり,協力
+つながり,コミュニケーション
+つながり,信頼
+つながり,共感
+つながり,安心・安全
+つながり,理解してもらう
+つながり,誠実さ
+つながり,尊重・尊敬
+つながり,支え/サポート
+遊び,喜び
+遊び,ユーモア
+遊び,楽しみ
+平和,調和
+平和,美
+平和,秩序
+平和,平穏
+身体的幸福,休息
+身体的幸福,安全
+身体的幸福,住まい
+身体的幸福,健やかさ
+意味,目的
+意味,貢献
+意味,学び
+意味,成長
+意味,希望
+意味,創造性
+意味,効率性
+意味,納得感
+自主・自立,自由
+自主・自立,選択
+自主・自立,主体性
+自主・自立,空間・余裕
+`;
+
+const parseNeeds = (csv) => {
+  const lines = csv.trim().split('\n');
+  const map = {};
+  lines.forEach(line => {
+    const [cat, item] = line.split(',');
+    if (!map[cat]) map[cat] = [];
+    if (item) map[cat].push(item.trim());
+  });
+  return map;
+};
+const needsData = parseNeeds(needsRawData);
+
+// --- Components ---
+
+const SectionTitle = ({ number, title, subtitle, icon: Icon, colorClass = "text-stone-800" }) => (
+  <div className="flex items-center gap-4 mb-6 border-b border-stone-200 pb-2 print:mb-4">
+    <div className={`flex items-center justify-center w-10 h-10 rounded-full font-serif text-lg shadow-md print:w-8 print:h-8 print:text-sm ${number === '02' || number === '03' ? 'bg-white border-2' : 'bg-stone-800 text-[#faf9f6]'}`}>
+      <span className={number === '02' || number === '03' ? 'text-stone-800 font-bold' : ''}>{number}</span>
+    </div>
+    <div>
+      <h2 className={`text-xl md:text-2xl font-bold tracking-widest flex items-center gap-2 print:text-lg ${colorClass}`}>
+        {title}
+      </h2>
+      <p className="text-xs text-stone-500 tracking-wider mt-0.5">{subtitle}</p>
+    </div>
+    {Icon && <Icon className="ml-auto text-stone-300 print:hidden" size={24} />}
+  </div>
+);
+
+// --- Shared Guides ---
+const ObservationGuide = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div className="mb-6 no-print">
+      <div className="flex items-center gap-2 mb-2">
+        <Quote size={16} className="text-stone-400 rotate-180" />
+        <p className="text-sm font-serif italic text-stone-600">
+          観察ただ見るだけで、たくさん観察できるものだよ。<br/>
+          <span className="text-xs text-stone-400 not-italic ml-4">── ヨギ・ベラ</span>
+        </p>
+      </div>
+      <button onClick={() => setIsOpen(!isOpen)} className="text-xs flex items-center gap-1 text-stone-500 hover:text-stone-800 transition-colors border-b border-stone-300 border-dashed pb-0.5">
+        <Eye size={14} />{isOpen ? "ガイドを閉じる" : "「評価」と「観察」の違いを見る"}
+      </button>
+      {isOpen && (
+        <div className="mt-4 bg-stone-50 p-4 rounded-sm border border-stone-200 text-sm leading-relaxed animate-in fade-in slide-in-from-top-2 duration-300">
+          <p className="mb-3 font-bold text-stone-700">その記述は「ビデオカメラ」で撮影できますか？</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="flex items-start gap-2 text-rose-700 bg-rose-50 p-2 rounded">
+              <AlertCircle size={16} className="mt-0.5 shrink-0" />
+              <div><span className="font-bold block text-xs mb-1">評価・診断</span>「怠け者だ」「協調性がない」</div>
+            </div>
+            <div className="flex items-start gap-2 text-teal-700 bg-teal-50 p-2 rounded">
+              <CheckCircle2 size={16} className="mt-0.5 shrink-0" />
+              <div><span className="font-bold block text-xs mb-1">観察（事実）</span>「約束に遅れた」「挨拶をしなかった」</div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const NeedsGuide = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div className="mb-6 no-print">
+      <div className="flex items-center gap-2 mb-2">
+        <Quote size={16} className="text-stone-400 rotate-180" />
+        <p className="text-sm font-serif italic text-stone-600">
+          人間のニーズを理解すれば、それを満たす仕事は半分終わったようなものだ。<br/>
+          <span className="text-xs text-stone-400 not-italic ml-4">── アドライ・スティーヴンソン</span>
+        </p>
+      </div>
+      <button onClick={() => setIsOpen(!isOpen)} className="text-xs flex items-center gap-1 text-stone-500 hover:text-stone-800 transition-colors border-b border-stone-300 border-dashed pb-0.5">
+        <Lightbulb size={14} />{isOpen ? "ガイドを閉じる" : "「手段」と「ニーズ」の違いを見る"}
+      </button>
+      {isOpen && (
+        <div className="mt-4 bg-stone-50 p-4 rounded-sm border border-stone-200 text-sm leading-relaxed animate-in fade-in slide-in-from-top-2 duration-300">
+          <p className="mb-3 font-bold text-stone-700">それは「相手にしてほしいこと」ですか？ 「自分の心の栄養」ですか？</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="flex items-start gap-2 text-amber-700 bg-amber-50 p-2 rounded">
+              <AlertCircle size={16} className="mt-0.5 shrink-0" />
+              <div><span className="font-bold block text-xs mb-1">手段 (Strategy)</span>「部屋を片付けて」「連絡して」</div>
+            </div>
+            <div className="flex items-start gap-2 text-purple-700 bg-purple-50 p-2 rounded">
+              <Anchor size={16} className="mt-0.5 shrink-0" />
+              <div><span className="font-bold block text-xs mb-1">ニーズ (Needs)</span>「秩序」「快適さ」「安心」</div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// --- Breathe/Pause Component ---
+const PauseButton = () => {
+  const [breathing, setBreathing] = useState(false);
+
+  useEffect(() => {
+    let timer;
+    if (breathing) {
+      timer = setTimeout(() => setBreathing(false), 8000); // 8 seconds breathing cycle
+    }
+    return () => clearTimeout(timer);
+  }, [breathing]);
+
+  return (
+    <div className="my-6 flex flex-col items-center">
+      {!breathing ? (
+        <button 
+          onClick={() => setBreathing(true)}
+          className="flex items-center gap-2 px-6 py-3 bg-sky-100 text-sky-700 rounded-full font-bold hover:bg-sky-200 transition-all shadow-sm"
+        >
+          <Wind size={20} />
+          反応する前に深呼吸（Pause）
+        </button>
+      ) : (
+        <div className="flex flex-col items-center animate-in fade-in duration-500">
+          <div className="w-16 h-16 rounded-full bg-sky-200 flex items-center justify-center relative mb-2">
+             <div className="absolute w-full h-full bg-sky-300 rounded-full opacity-30 animate-ping"></div>
+             <Wind size={24} className="text-sky-700" />
+          </div>
+          <p className="text-sky-700 text-sm font-bold animate-pulse">息を吸って... 吐いて...</p>
+          <p className="text-xs text-sky-500 mt-1">自分と相手の「いのち」に意識を戻します</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+
+// --- DIALOGUE MODE (Enhanced with Response & Empathy) ---
+const DialogueMode = () => {
+  const [observation, setObservation] = useState('');
+  const [request, setRequest] = useState('');
+  const [selectedFeelings, setSelectedFeelings] = useState(new Set());
+  const [selectedNeeds, setSelectedNeeds] = useState(new Set());
+  const [feelingType, setFeelingType] = useState('unsatisfied');
+  const [intention, setIntention] = useState(null); 
+  
+  // Step 5 State
+  const [predictedResponse, setPredictedResponse] = useState('');
+  const [otherFeelings, setOtherFeelings] = useState('');
+  const [otherNeeds, setOtherNeeds] = useState('');
+
+  const toggleSet = (set, val, setter) => {
+    const newSet = new Set(set);
+    if (newSet.has(val)) newSet.delete(val); else newSet.add(val);
+    setter(newSet);
+  };
+
+  const insightSentence = useMemo(() => {
+    const feelings = Array.from(selectedFeelings).join('、');
+    const needs = Array.from(selectedNeeds).join('、');
+    if (!feelings && !needs) return "（感情とニーズを選択すると、ここに心のつながりが表示されます）";
+    return (
+      <span className="block leading-loose">
+        わたしが今のように（
+        <span className={`font-bold border-b-2 mx-1 px-1 ${feelingType === 'satisfied' ? 'border-blue-300 text-blue-900' : 'border-rose-300 text-rose-900'}`}>{feelings || '___'}</span>
+        ）感じているのは、<br className="md:hidden"/>
+        <span className="font-bold border-b-2 border-purple-300 mx-1 px-1 text-purple-900">{needs || '___'}</span>
+        <br className="md:hidden"/>
+        を必要としている／大切にしているからです。
+      </span>
+    );
+  }, [selectedFeelings, selectedNeeds, feelingType]);
+
+  return (
+    <div className="animate-in fade-in duration-500">
+      
+      {/* Intro Quote for Dialogue Mode */}
+      <div className="mb-12 text-center no-print">
+        <div className="bg-blue-50/50 p-6 rounded-lg border border-blue-100 max-w-2xl mx-auto">
+          <p className="text-blue-900 font-bold text-lg mb-2 font-serif">
+            愛とは、他者のなかに自分を見出すこと、<br/>そしてそれを知ることの喜びにほかならない。
+          </p>
+          <p className="text-blue-700/60 text-xs">── アレクサンダー・スミス</p>
+        </div>
+        <p className="text-stone-500 text-sm mt-4 leading-relaxed">
+          相手の言葉の向こう側にある「美しさ（ニーズ）」に耳を傾け、<br/>
+          「今ここにいる」という贈り物（プレゼンス）を差し出します。
+        </p>
+      </div>
+
+      {/* STEP 1: OBSERVATION */}
+      <section className="page-break-avoid mb-12">
+        <SectionTitle number="01" title="観察" subtitle="Observation" icon={PenTool} />
+        <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-stone-300">
+          <ObservationGuide />
+          <textarea
+            value={observation}
+            onChange={(e) => setObservation(e.target.value)}
+            placeholder="事実のみを記述します（評価を交えずに）。&#13;&#10;×「あの子は怠け者だ」&#13;&#10;○「娘は部屋を片付けていなかった」"
+            className="w-full min-h-[100px] p-4 bg-stone-50/50 border border-stone-200 focus:border-stone-400 focus:bg-white outline-none transition-all leading-relaxed text-stone-800 placeholder:text-stone-400/70 resize-y rounded-sm"
+          />
+        </div>
+      </section>
+
+      {/* STEP 2 & 3: FEELING & NEEDS */}
+      <div className={`border-2 rounded-xl p-1 transition-colors duration-500 ${feelingType === 'satisfied' ? 'border-blue-100 bg-blue-50/30' : 'border-rose-100 bg-rose-50/30'}`}>
+        <div className="flex justify-center -mt-5 mb-8 no-print">
+            <div className="bg-white p-1 rounded-full shadow-md border border-stone-100 flex">
+              <button onClick={() => { setFeelingType('unsatisfied'); setSelectedNeeds(new Set()); }} className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 flex items-center gap-2 ${feelingType === 'unsatisfied' ? 'bg-rose-600 text-white shadow-sm' : 'text-stone-400 hover:text-rose-600'}`}><span>満たされていない（不快）</span></button>
+              <button onClick={() => { setFeelingType('satisfied'); setSelectedNeeds(new Set()); }} className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 flex items-center gap-2 ${feelingType === 'satisfied' ? 'bg-blue-600 text-white shadow-sm' : 'text-stone-400 hover:text-blue-600'}`}><span>満たされている（快）</span></button>
+            </div>
+        </div>
+
+        <section className="page-break-avoid mb-8 px-4 md:px-8">
+          <SectionTitle number="02" title={feelingType === 'satisfied' ? "満たされた感情" : "満たされなかった感情"} subtitle="Feeling" icon={Heart} colorClass={feelingType === 'satisfied' ? "text-blue-800" : "text-rose-800"}/>
+          <div className="bg-white/80 p-6 rounded-sm shadow-sm">
+            <div className="no-print">
+              {Object.entries(feelingsData[feelingType].categories).map(([category, items]) => (
+                <div key={category} className="mb-4 last:mb-0">
+                  <h4 className={`text-xs font-bold mb-2 pl-2 border-l-2 ${feelingType === 'satisfied' ? 'border-blue-300 text-blue-800' : 'border-rose-300 text-rose-800'}`}>{category}</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {items.map(item => (
+                      <button key={item} onClick={() => toggleSet(selectedFeelings, item, setSelectedFeelings)} className={`px-3 py-1.5 text-sm rounded-sm transition-all duration-200 ${selectedFeelings.has(item) ? (feelingType === 'satisfied' ? 'bg-blue-600 text-white shadow-md' : 'bg-rose-600 text-white shadow-md') : 'bg-white border border-stone-200 text-stone-600'}`}>{item}</button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="hidden print:block"><div className="flex flex-wrap gap-2">{Array.from(selectedFeelings).map(item => (<span key={item} className={`px-3 py-1 border rounded-sm text-sm ${feelingType === 'satisfied' ? 'bg-blue-50 border-blue-200 text-blue-900' : 'bg-rose-50 border-rose-200 text-rose-900'}`}>{item}</span>))}</div></div>
+          </div>
+        </section>
+        
+        <div className="flex justify-center -my-4 relative z-10 no-print text-stone-300"><ArrowDown size={32} strokeWidth={1} /></div>
+
+        <section className="page-break-avoid mb-8 px-4 md:px-8">
+          <SectionTitle number="03" title="ニーズ" subtitle="Needs / Values" icon={Anchor} colorClass="text-purple-900" />
+          <div className="bg-white/80 p-6 rounded-sm shadow-sm relative overflow-hidden">
+              <NeedsGuide />
+              <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none font-serif italic text-4xl text-purple-900 no-print">I need...</div>
+              <p className="mb-6 text-sm font-bold text-purple-900 bg-purple-50 p-3 rounded border border-purple-100 no-print flex items-start gap-2"><Quote size={16} className="shrink-0 mt-1"/>{feelingType === 'satisfied' ? "その喜びを感じたのは、どの価値観（ニーズ）が大切にされたからですか？" : "その痛みを感じたのは、どの価値観（ニーズ）が大切にされなかったからですか？"}</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6 no-print">
+              {Object.entries(needsData).map(([cat, items]) => (
+                <div key={cat} className="break-inside-avoid"><h4 className="text-stone-400 text-[10px] font-bold uppercase tracking-widest mb-2 border-b border-stone-100">{cat}</h4><div className="flex flex-wrap gap-2">{items.map(item => (<button key={item} onClick={() => toggleSet(selectedNeeds, item, setSelectedNeeds)} className={`px-3 py-1.5 text-sm rounded-sm transition-all duration-200 ${selectedNeeds.has(item) ? 'bg-purple-600 text-white shadow-md font-bold' : 'bg-white border border-stone-200 text-stone-600 hover:text-purple-700'}`}>{item}</button>))}</div></div>
+              ))}
+            </div>
+            <div className="hidden print:block"><div className="flex flex-wrap gap-2">{Array.from(selectedNeeds).map(item => (<span key={item} className="px-3 py-1 bg-purple-50 border border-purple-200 text-purple-900 rounded-sm text-sm">{item}</span>))}</div></div>
+          </div>
+        </section>
+
+        <div className="mx-4 md:mx-8 mb-8 p-6 bg-white border-2 border-stone-800 text-center shadow-[4px_4px_0px_0px_rgba(68,64,60,1)] print:border print:shadow-none">
+          <div className="text-xs font-bold text-stone-400 uppercase tracking-widest mb-4">Self-Empathy Insight</div>
+          <p className="text-lg md:text-xl font-medium text-stone-800 font-serif">{insightSentence}</p>
+        </div>
+      </div>
+
+      {/* STEP 4: REQUEST */}
+      <section className="page-break-avoid mt-12 mb-12">
+        <SectionTitle number="04" title="リクエスト" subtitle="Request" icon={MessageCircle} />
+        <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-stone-300">
+          <div className="mb-4 text-sm text-stone-600 leading-relaxed no-print bg-blue-50/50 p-4 border border-blue-100 rounded">
+            <span className="font-bold text-blue-800 block mb-2">💡 ヒント: 行動を促す肯定形の言葉で</span>
+            あなたのニーズを満たすために、相手にしてほしい具体的な行動はなんですか？<br/>
+            <span className="text-xs text-stone-400 mt-1 block">× 「ごみ出し戦争を起こさないで」 → ○ 「ごみを出してくれたら、私は安心できる」</span>
+          </div>
+          <textarea
+            value={request}
+            onChange={(e) => setRequest(e.target.value)}
+            placeholder="「______をしてもらえませんか？」&#13;&#10;（相手がNoと言える余地のある、具体的で肯定的な行動）"
+            className="w-full min-h-[120px] p-4 bg-stone-50/50 border border-stone-200 focus:border-stone-400 focus:bg-white outline-none transition-all leading-relaxed text-stone-800 placeholder:text-stone-400/70 resize-y rounded-sm"
+          />
+          
+          {/* Intention & Purpose Check */}
+          <div className="mt-8 border-t border-stone-200 pt-8 no-print">
+            <h4 className="font-bold text-stone-700 mb-4 flex items-center gap-2 text-lg">
+              <Scale size={20} className="text-stone-400" />
+              意図と目的の確認 (Intention Check)
+            </h4>
+            <div className="bg-stone-50 p-6 rounded-lg border border-stone-200">
+              <p className="font-bold text-stone-800 mb-4 text-center">
+                もし、相手がリクエストに応じなかったら、それは「失敗」ですか？
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <button onClick={() => setIntention('control')} className={`p-4 rounded-lg border text-left transition-all ${intention === 'control' ? 'bg-amber-50 border-amber-300 ring-1 ring-amber-300' : 'bg-white border-stone-200 hover:border-stone-400'}`}><span className="block font-bold mb-2 text-stone-800">A. 失敗だと思う</span><ul className="text-sm text-stone-600 list-disc list-inside space-y-1"><li>目的は「相手を動かすこと」</li><li>思い通りにならなければ意味がない</li></ul></button>
+                <button onClick={() => setIntention('connection')} className={`p-4 rounded-lg border text-left transition-all ${intention === 'connection' ? 'bg-emerald-50 border-emerald-300 ring-1 ring-emerald-300' : 'bg-white border-stone-200 hover:border-stone-400'}`}><span className="block font-bold mb-2 text-stone-800">B. 失敗ではない</span><ul className="text-sm text-stone-600 list-disc list-inside space-y-1"><li>目的は「つながりを作ること」</li><li>Noと言われたら、対話を深めるチャンス</li></ul></button>
+              </div>
+              {intention === 'control' && (<div className="mt-6 bg-amber-50 p-4 rounded border-l-4 border-amber-500 animate-in fade-in"><h5 className="font-bold text-amber-800 flex items-center gap-2 mb-2"><ShieldAlert size={18} />それは「操作」かもしれません</h5><p className="text-sm text-amber-900 leading-relaxed">目的が「自分の望み通りに人を動かすこと」であれば、相手はそれを敏感に感じ取り、抵抗します。</p></div>)}
+              {intention === 'connection' && (<div className="mt-6 bg-emerald-50 p-4 rounded border-l-4 border-emerald-500 animate-in fade-in"><h5 className="font-bold text-emerald-800 flex items-center gap-2 mb-2"><Users size={18} />それがNVCの精神です</h5><p className="text-sm text-emerald-900 leading-relaxed">相手が応じなくても、それは「No」ではなく「別のニーズへのYes」です。</p></div>)}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* STEP 5: HEARING THE BEAUTIFUL SONG (NEW) */}
+      <section className="page-break-avoid mt-12 mb-12">
+        <SectionTitle number="05" title="美しい歌を聴く" subtitle="Hearing the Beautiful Song" icon={Music} colorClass="text-indigo
