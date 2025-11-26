@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Printer, RefreshCw, PenTool, Heart, Anchor, MessageCircle, ArrowDown, Quote, Eye, AlertCircle, CheckCircle2, Lightbulb, ArrowRight, ShieldAlert, Users, Sparkles, Brain, Flower2, XCircle, Skull, Sun, Feather, Sunrise, Scale, Ear, Zap, Music, Wind, Hourglass, RefreshCcw, Leaf, Building2, Globe, Lock, Unlock, Handshake, GitCompare, Flame, Siren, StickyNote, Footprints, Flag, Ghost, Repeat, Mic } from 'lucide-react';
+import { Printer, RefreshCw, PenTool, Heart, Anchor, MessageCircle, ArrowDown, Quote, Eye, AlertCircle, CheckCircle2, Lightbulb, ArrowRight, ShieldAlert, Users, Sparkles, Brain, Flower2, XCircle, Skull, Sun, Feather, Sunrise, Scale, Ear, Zap, Music, Wind, Hourglass, RefreshCcw, Leaf, Building2, Globe, Lock, Unlock, Handshake, GitCompare, Flame, Siren, StickyNote, Footprints, Flag, Ghost, Repeat, Mic, Briefcase, Landmark, Gavel } from 'lucide-react';
 
 // --- Google Fonts ---
 const fontLink = document.createElement('link');
@@ -85,7 +85,6 @@ const feelingsData = {
 };
 
 // --- Shared Components ---
-
 const SectionTitle = ({ number, title, subtitle, icon: Icon, colorClass = "text-stone-800" }) => (
   <div className="flex items-center gap-4 mb-6 border-b border-stone-200 pb-2 print:mb-4">
     <div className={`flex items-center justify-center w-10 h-10 rounded-full font-serif text-lg shadow-md print:w-8 print:h-8 print:text-sm ${number.length > 2 ? 'w-auto px-3' : ''} ${number === '02' || number === '03' ? 'bg-white border-2' : 'bg-stone-800 text-[#faf9f6]'}`}>
@@ -189,7 +188,6 @@ const PauseButton = () => {
     </div>
   );
 };
-
 
 // ==========================================
 // MODE 1: DIALOGUE MODE
@@ -1011,8 +1009,236 @@ const EnemyImageMode = () => {
   );
 };
 
+// ==========================================
+// MODE 9: TEAM MEETING MODE
+// ==========================================
+const TeamMeetingMode = () => {
+  const [topic, setTopic] = useState('');
+  const [discussion, setDiscussion] = useState('');
+  const [isProductive, setIsProductive] = useState(null);
+  const [request, setRequest] = useState('');
 
-const NvcUltimateEdition = () => {
+  return (
+    <div className="animate-in fade-in duration-500">
+      <div className="mb-12 text-center no-print">
+        <div className="bg-indigo-50/50 p-6 rounded-lg border border-indigo-100 max-w-2xl mx-auto">
+          <p className="text-indigo-900 font-bold text-lg mb-2 font-serif">
+            意欲ある人が数名集まっても世界を変えられるのか、と疑ってはならない。<br/>その少数の人々こそが、実際に変化をもたらしてきたのだから。
+          </p>
+          <p className="text-indigo-700/60 text-xs">── マーガレット・ミード</p>
+        </div>
+        <p className="text-stone-500 text-sm mt-4 leading-relaxed">
+          社会変化のためのチームミーティングを、不毛な議論から「生産的な協働」に変えるためのプロセスです。
+        </p>
+      </div>
+
+      {/* STEP 1: TOPIC & DISCUSSION */}
+      <section className="page-break-avoid mb-12">
+        <SectionTitle number="01" title="議題と現状" subtitle="Topic & Current State" icon={Users} colorClass="text-indigo-800" />
+        <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-indigo-300">
+          <div className="mb-4">
+            <label className="block text-sm font-bold text-stone-700 mb-2">今の議題は何ですか？（または誰の発言ですか？）</label>
+            <input 
+              type="text" 
+              value={topic} 
+              onChange={(e) => setTopic(e.target.value)}
+              placeholder="例：校長の不祥事について、記事の切り抜き..."
+              className="w-full p-3 bg-stone-50 border border-stone-200 rounded-sm outline-none focus:border-indigo-300"
+            />
+          </div>
+          
+          <div className="mb-4">
+            <label className="block text-sm font-bold text-stone-700 mb-2">今の議論の様子は？</label>
+            <textarea 
+              value={discussion} 
+              onChange={(e) => setDiscussion(e.target.value)}
+              placeholder="例：各自が自分の体験談を語り合っている。不満が出続けている。"
+              className="w-full min-h-[80px] p-3 bg-stone-50 border border-stone-200 rounded-sm outline-none focus:border-indigo-300"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* STEP 2: PRODUCTIVITY CHECK */}
+      <section className="page-break-avoid mb-12">
+        <SectionTitle number="02" title="生産性チェック" subtitle="Productivity Check" icon={CheckCircle2} colorClass="text-indigo-800" />
+        <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-indigo-300">
+          <div className="text-center">
+            <p className="font-bold text-lg text-indigo-900 mb-6">この会議は、今、「生産的」ですか？</p>
+            <div className="flex justify-center gap-6 mb-6">
+              <button onClick={() => setIsProductive(true)} className={`px-6 py-3 rounded-full font-bold border ${isProductive === true ? 'bg-emerald-100 border-emerald-500 text-emerald-800' : 'bg-white border-stone-200 text-stone-500'}`}>はい、進んでいます</button>
+              <button onClick={() => setIsProductive(false)} className={`px-6 py-3 rounded-full font-bold border ${isProductive === false ? 'bg-rose-100 border-rose-500 text-rose-800' : 'bg-white border-stone-200 text-stone-500'}`}>いいえ、停滞しています</button>
+            </div>
+          </div>
+
+          {isProductive === false && (
+            <div className="bg-rose-50 p-5 rounded border border-rose-200 animate-in fade-in">
+              <p className="font-bold text-rose-800 mb-2 flex items-center gap-2"><AlertCircle size={18}/> 原因：明確なリクエストがない</p>
+              <p className="text-sm text-rose-700 mb-4">
+                発言者が「自分の考え（面白いと思った、ひどいと思った）」を述べるだけで、<br/>
+                <strong>「グループに何を求めているか（リクエスト）」</strong>を伝えていない可能性があります。
+              </p>
+              <div className="bg-white p-4 rounded border border-rose-100 text-rose-900 font-serif italic text-center">
+                「あなたがこの記事を紹介したとき、グループに何を求めていたのですか？」<br/>
+                「あなたの体験談を聞いた私たちに、どう反応してほしいですか？」
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* STEP 3: CLARIFYING REQUEST */}
+      <section className="page-break-avoid mb-12">
+        <SectionTitle number="03" title="リクエストの明確化" subtitle="Clarifying the Request" icon={MessageCircle} colorClass="text-indigo-800" />
+        <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-indigo-300">
+          <div className="mb-4 text-sm text-stone-600 no-print">
+            <p>
+              発言者（またはあなた自身）が、グループに対して求めている「具体的な反応」を言葉にしてみましょう。<br/>
+              （例：情報の共有として聞いてほしいだけ？ 対策案を出してほしい？ 共感してほしい？）
+            </p>
+          </div>
+          <textarea 
+            value={request} 
+            onChange={(e) => setRequest(e.target.value)}
+            placeholder="例：「この記事について、今後の活動の参考になるか意見がほしい」「私の辛かった経験に、ただ共感して聞いてほしい」"
+            className="w-full min-h-[80px] p-3 bg-indigo-50/30 border border-indigo-200 rounded-sm outline-none focus:border-indigo-400 text-indigo-900"
+          />
+          {request && (
+            <div className="mt-4 p-4 bg-indigo-600 text-white rounded text-center font-bold shadow-md">
+              <Sparkles size={16} className="inline mr-2"/>
+              このリクエストを提示することで、会議は再び動き出します！
+            </div>
+          )}
+        </div>
+      </section>
+
+    </div>
+  );
+};
+
+// ==========================================
+// MODE 10: STRUCTURAL COOPERATION MODE
+// ==========================================
+const StructuralCooperationMode = () => {
+  const [role, setRole] = useState(''); // "役人", "担当者"
+  const [bureaucraticSpeak, setBureaucraticSpeak] = useState('');
+  const [humanNeeds, setHumanNeeds] = useState(new Set());
+  const [strategy, setStrategy] = useState('');
+  
+  const toggleSet = (set, val, setter) => {
+    const newSet = new Set(set);
+    if (newSet.has(val)) newSet.delete(val); else newSet.add(val);
+    setter(newSet);
+  };
+
+  return (
+    <div className="animate-in fade-in duration-500">
+      <div className="mb-12 text-center no-print">
+        <div className="bg-slate-50/50 p-6 rounded-lg border border-slate-200 max-w-2xl mx-auto">
+          <p className="text-slate-900 font-bold text-lg mb-2 font-serif">
+            構造の内部にいる人を敵として見なさない。<br/>その構造の中にいる人々のニーズを聴きとろうとするのです。
+          </p>
+        </div>
+        <p className="text-stone-500 text-sm mt-4 leading-relaxed">
+          役所や企業の担当者を「敵」から「助言者」に変えるプロセス。<br/>
+          お役所言葉（構造の言葉）の裏にある、一人の人間の「恐れ」と「ニーズ」に耳を傾けます。
+        </p>
+      </div>
+
+      {/* STEP 1: THE BUREAUCRAT */}
+      <section className="page-break-avoid mb-12">
+        <SectionTitle number="01" title="構造の言葉" subtitle="Bureaucratic Language" icon={Landmark} colorClass="text-slate-800" />
+        <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-slate-400">
+          <div className="mb-4">
+            <label className="block text-sm font-bold text-stone-700 mb-2">相手の役割・立場は？</label>
+            <input 
+              type="text" 
+              value={role} 
+              onChange={(e) => setRole(e.target.value)}
+              placeholder="例：市の担当職員、人事部長..."
+              className="w-full p-3 bg-slate-50 border border-stone-200 rounded-sm outline-none"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-bold text-stone-700 mb-2">相手が言った「お役所言葉（断り文句）」は？</label>
+            <textarea 
+              value={bureaucraticSpeak} 
+              onChange={(e) => setBureaucraticSpeak(e.target.value)}
+              placeholder="例：「規則ですので無理です」「現実離れしています」「前例がありません」"
+              className="w-full min-h-[80px] p-3 bg-slate-50 border border-stone-200 rounded-sm outline-none"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* STEP 2: HUMAN TRANSLATION */}
+      <section className="page-break-avoid mb-12">
+        <SectionTitle number="02" title="人間への翻訳" subtitle="Humanizing Translation" icon={Heart} colorClass="text-teal-800" />
+        <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-teal-300">
+          <div className="mb-4 text-sm text-stone-600 no-print">
+            <p className="mb-2">
+              彼は「役人」としてではなく、「一人の人間」として何を感じ、何を恐れているのでしょうか？<br/>
+              （例：上司に怒られるのが怖い？ 自分の立場を守りたい？ 実は法律が嫌だと思っている？）
+            </p>
+            <div className="h-40 overflow-y-auto bg-teal-50/30 border border-teal-100 rounded p-2">
+              {Object.entries(needsData).map(([cat, items]) => (
+                <div key={cat} className="mb-2">
+                  <h4 className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">{cat}</h4>
+                  <div className="flex flex-wrap gap-1">
+                    {items.map(item => (
+                      <button key={item} onClick={() => toggleSet(humanNeeds, item, setHumanNeeds)} className={`px-2 py-0.5 text-[10px] rounded border ${humanNeeds.has(item) ? 'bg-teal-600 text-white' : 'bg-white text-stone-500'}`}>{item}</button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="p-4 bg-teal-50 border border-teal-200 rounded text-teal-900 font-medium text-center font-serif">
+            {role || '彼/彼女'}が本当に求めているのは、<br className="md:hidden"/>
+            <span className="font-bold text-teal-700 mx-1 border-b border-teal-400">{Array.from(humanNeeds).join('・') || '______'}</span>
+            <br className="md:hidden"/>
+            （安全、保身、理解など）なのかもしれません。
+          </div>
+        </div>
+      </section>
+
+      {/* STEP 3: THE ADVISOR STRATEGY */}
+      <section className="page-break-avoid mb-12">
+        <SectionTitle number="03" title="助言者になってもらう" subtitle="Become an Advisor" icon={Handshake} colorClass="text-emerald-800" />
+        <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-emerald-300">
+          <div className="mb-4 text-sm text-stone-600 no-print">
+            <p className="font-bold text-emerald-800 mb-2">Win-Winの提案</p>
+            <p>
+              相手のニーズ（保身など）を尊重しながら、こちらの目的も達成する方法はあるでしょうか？<br/>
+              相手を敵として攻撃するのではなく、<strong>「どうすればこの壁を越えられるか教えてくれる助言者」</strong>として協力を仰ぎます。
+            </p>
+          </div>
+          
+          <div className="p-6 bg-emerald-50/50 border border-emerald-200 rounded text-emerald-900 font-serif italic leading-relaxed mb-4 relative">
+             <Quote size={20} className="absolute top-3 left-3 text-emerald-200 rotate-180" />
+             「あなたの立場（安全・規則の遵守）を守りながら、<br/>
+             私たちが求めている変化を実現するためには、どんな手順を踏めばいいでしょうか？<br/>
+             もしよろしければ、私たちに知恵（アドバイス）を貸していただけませんか？」
+             <Quote size={20} className="absolute bottom-3 right-3 text-emerald-200" />
+          </div>
+
+          <textarea 
+            value={strategy} 
+            onChange={(e) => setStrategy(e.target.value)}
+            placeholder="あなた自身の言葉で、相手へのアプローチを書いてみましょう..."
+            className="w-full min-h-[100px] p-4 bg-white border border-emerald-200 focus:border-emerald-400 outline-none resize-y rounded-sm text-stone-800"
+          />
+        </div>
+      </section>
+
+    </div>
+  );
+};
+
+// ==========================================
+// APP WRAPPER
+// ==========================================
+const NvcMasterApp = () => {
   const [mindset, setMindset] = useState(null); 
   const [mode, setMode] = useState('dialogue');
 
@@ -1078,6 +1304,9 @@ const NvcUltimateEdition = () => {
           textarea { border: none !important; resize: none; overflow: hidden; padding: 0; min-height: auto; }
         }
         .print-only { display: none; }
+        /* Custom Scrollbar Hide */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
 
       <header className="sticky top-0 z-50 bg-[#fffdfa]/90 backdrop-blur-md border-b border-stone-200 no-print transition-all duration-300 shadow-sm">
@@ -1095,8 +1324,10 @@ const NvcUltimateEdition = () => {
             <button onClick={() => setMode('self-empathy')} className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition-all ${mode === 'self-empathy' ? 'bg-emerald-700 text-white shadow-sm' : 'bg-stone-100 text-stone-500 hover:text-stone-700'}`}><Flower2 size={14} />自己</button>
             <button onClick={() => setMode('healing')} className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition-all ${mode === 'healing' ? 'bg-orange-700 text-white shadow-sm' : 'bg-stone-100 text-stone-500 hover:text-stone-700'}`}><Sun size={14} />癒やし</button>
             <button onClick={() => setMode('enemy-image')} className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition-all ${mode === 'enemy-image' ? 'bg-purple-700 text-white shadow-sm' : 'bg-stone-100 text-stone-500 hover:text-stone-700'}`}><Ghost size={14} />敵対解消</button>
+            <button onClick={() => setMode('team-meeting')} className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition-all ${mode === 'team-meeting' ? 'bg-indigo-700 text-white shadow-sm' : 'bg-stone-100 text-stone-500 hover:text-stone-700'}`}><Briefcase size={14} />チーム</button>
+            <button onClick={() => setMode('structural')} className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition-all ${mode === 'structural' ? 'bg-slate-700 text-white shadow-sm' : 'bg-stone-100 text-stone-500 hover:text-stone-700'}`}><Landmark size={14} />構造協働</button>
             <button onClick={() => setMode('restorative')} className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition-all ${mode === 'restorative' ? 'bg-teal-700 text-white shadow-sm' : 'bg-stone-100 text-stone-500 hover:text-stone-700'}`}><RefreshCcw size={14} />修復</button>
-            <button onClick={() => setMode('mediation')} className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition-all ${mode === 'mediation' ? 'bg-indigo-700 text-white shadow-sm' : 'bg-stone-100 text-stone-500 hover:text-stone-700'}`}><Handshake size={14} />仲裁</button>
+            <button onClick={() => setMode('mediation')} className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition-all ${mode === 'mediation' ? 'bg-blue-700 text-white shadow-sm' : 'bg-stone-100 text-stone-500 hover:text-stone-700'}`}><Handshake size={14} />仲裁</button>
             <button onClick={() => setMode('breakthrough')} className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition-all ${mode === 'breakthrough' ? 'bg-red-700 text-white shadow-sm' : 'bg-stone-100 text-stone-500 hover:text-stone-700'}`}><Flame size={14} />危機</button>
             <button onClick={() => setMode('social')} className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition-all ${mode === 'social' ? 'bg-fuchsia-700 text-white shadow-sm' : 'bg-stone-100 text-stone-500 hover:text-stone-700'}`}><Globe size={14} />社会変革</button>
           </div>
@@ -1123,6 +1354,8 @@ const NvcUltimateEdition = () => {
             {mode === 'self-empathy' && <SelfEmpathyMode />}
             {mode === 'healing' && <HealingMode />}
             {mode === 'enemy-image' && <EnemyImageMode />}
+            {mode === 'team-meeting' && <TeamMeetingMode />}
+            {mode === 'structural' && <StructuralCooperationMode />}
             {mode === 'restorative' && <RestorativeMode />}
             {mode === 'mediation' && <MediationMode />}
             {mode === 'breakthrough' && <BreakthroughMode />}
@@ -1138,4 +1371,4 @@ const NvcUltimateEdition = () => {
   );
 };
 
-export default NvcUltimateEdition;
+export default NvcMasterApp;
